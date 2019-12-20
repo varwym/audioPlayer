@@ -1,8 +1,7 @@
 <template>
     <header>
-        <img class="header-icon" src="@/assets/videoIcon.png" alt="">
-        <span class="header-name">音樂播放器</span>
-        
+        <a class="home_menu"></a>
+        <a class="home_search"></a>
     </header>
 </template>
 <script>
