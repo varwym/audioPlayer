@@ -1,7 +1,6 @@
 <template>
   <div>
     <Header />
-    <ListView />
   </div>
 </template>
 
