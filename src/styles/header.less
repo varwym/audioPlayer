@@ -1,16 +1,22 @@
 @import "common.less";
 
 header {
-    position: fixed;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 45px;
     background-color: white;
+    display: -webkit-box;
+    display: -ms-flexbox;
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
 }
 .home_icon {
     position: relative;
@@ -28,5 +34,36 @@ header {
     background-image: url('../assets/home_search.png');
 }
 .home_iconCenter {
-    
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    width: 40%;
+}
+.home_music {
+    background-image: url('../assets/home_music.png');
+} 
+.home_music_select {
+    background-image: url('../assets/home_music_select.png');
+}
+.home_note1 {
+    background-image: url('../assets/home_note1.png');
+}
+.home_note1_select {
+    background-image: url('../assets/home_note1_select.png');
+}
+.home_video {
+    background-image: url('../assets/home_video.png');
+}
+.home_video_select {
+    background-image: url('../assets/home_video_select.png');
 }
