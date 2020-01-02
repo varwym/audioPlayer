@@ -1,8 +1,8 @@
 <template>
     <ul class="nav_list">
-        <li v-bind:class="{nav_list_li_select: selectId === 0}" @click="changeSelectId(0)">推薦</li>
-        <li v-bind:class="{nav_list_li_select: selectId === 1}" @click="changeSelectId(1)">朋友</li>
-        <li v-bind:class="{nav_list_li_select: selectId === 2}" @click="changeSelectId(2)">電臺</li>
+        <li :class="{nav_list_li_select: selectId === 0}" @click="changeSelectId(0)">推荐</li>
+        <li :class="{nav_list_li_select: selectId === 1}" @click="changeSelectId(1)">朋友</li>
+        <li :class="{nav_list_li_select: selectId === 2}" @click="changeSelectId(2)">电台</li>
     </ul>
 </template>
 <script>
@@ -10,7 +10,7 @@
         name: 'Nav',
         data () {
             return {
-                selectId: 1
+                selectId: 0
             }
         },
         methods: {
@@ -21,5 +21,5 @@
     }
 </script>
 <style lang="less" scoped>
-@import "../../styles/nav.less";
+    @import "../../styles/home/nav.less";
 </style>
