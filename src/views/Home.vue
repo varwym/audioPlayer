@@ -4,7 +4,7 @@
     <Nav />
     <div class="home_list">
       <Banner />
-      
+      <h5 class="home_title">推荐歌单<span>&nbsp;></span></h5>
     </div>
   </div>
 </template>
