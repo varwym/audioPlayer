@@ -6,6 +6,11 @@ Vue.use(VueRouter)
 
 const routes = [
   {
+    path: '/',
+    name: 'discover',
+    component: discover
+  },
+  {
     path: '/discover',
     name: 'discover',
     component: discover
