@@ -1,32 +1,76 @@
 <template>
-    <div ref="swiper" class="swiper">
-        <img class="swiper_img" v-for="(item, index) in imgArray" :src="item"  :key="index" />
+    <div ref="banner" class="banner"
+        @touchstart="moveStart"
+        @touchmove="moving"
+        @touchend="moveEnd">
+        <banner-item v-for="(item, index) in imgArray" :key="index">
+             <img :src="item">
+        </banner-item>
     </div>
 </template>
 <script>
+import BannerItem from "./banner-item.vue";
 export default {
     name: "banner",
+    components: {
+        BannerItem
+    },
+    props: ["imgs"],
     data() {
         return {
-            imgArray: ["http://p1.music.126.net/hggCzQXcwB4oe4qTra2JLw==/109951164602910186.jpg", "http://p1.music.126.net/o4TXSVd4fMj9o1nJ8iFXYQ==/109951164602906935.jpg", "http://p1.music.126.net/Jtfsz1HNm7rwCFlqVFakqQ==/109951164602919586.jpg"]
+            imgArray: this.imgs,
+            items: [],
+            boxWidth: 0,
+            index: 0,
+            startX: 0
         }
     },
     created() {
-        console.log(this.$refs.swiper)
-        
+       if (this.imgArray.length > 1) {
+            this.imgArray.splice(0, 0, this.imgArray[this.imgArray.length - 1]);
+            this.imgArray.push(this.imgArray[1]);
+        }
     },
     mounted () {
-        console.log(this.$refs.swiper.querySelectorAll('.swiper_img'))
-        this.$refs.swiper.querySelectorAll('.swiper_img')[0].style.transform = `translate3d(50px, 0, 0)`
-        
+        this.initImgs();
     },
     methods: {
         initImgs() {
-            if(imgArray.length > 1) {
-                imgArray.push(imgArray[0]);
-                imgArray.splice(0, 0, imgArray[imgArray.length - 1]);
-                
+            this.items = this.$refs.banner.querySelectorAll('.banner_item');
+            if (this.items.length > 1) {
+                this.boxWidth = this.$refs.banner.offsetWidth;
+                this.setTransform();
+            } else {
+                console.log('轮播图数量小于2');
             }
+        },
+        setTransform(offsetNum) {
+            let offset = offsetNum || 0;
+            let offsetNew = (this.index + 1) * (this.boxWidth + 10) - offset;
+            this.items.forEach(item => {
+                 item.style.transform = `translate3d(${-offsetNew}px, 0, 0)`;
+            });
+        },
+        setTranslate() {
+            this.items.forEach(item => {
+                
+            })
+        },
+        moveStart(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.startX = e.changedTouches[0].pageX;
+        },
+        moving(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            let moveX = e.changedTouches[0].pageX - this.startX;
+            this.setTransform(moveX);
+        },
+        moveEnd(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log(this.items[0].style.transform.split(',')[0].split('(')[1])
         }
     }
 }
