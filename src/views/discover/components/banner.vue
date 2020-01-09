@@ -23,6 +23,7 @@ export default {
             boxWidth: 0,
             index: 0,
             startX: 0,
+            moveX: 0,
             transformX: 0,
             duration: 0
         }
@@ -39,14 +40,13 @@ export default {
     methods: {
         initImgs() {
             this.items = this.$refs.banner.querySelectorAll('.banner_item');
-            console.log(this.items[0])
             if (this.items.length > 1) {
                 this.boxWidth = this.$refs.banner.offsetWidth;
                 this.items.forEach(item => {
                     item.style.transform = `translate3d(${-this.boxWidth - 10}px, 0, 0)`;
                 });
-                //设置初始偏移量
                 this.updateTransformX();
+                
             } else {
                 console.log('轮播图数量小于2');
             }
@@ -71,19 +71,17 @@ export default {
         moveStart(e) {
             e.preventDefault();
             e.stopPropagation();
-            if (this.transformX !== 0) {
-                //点击设置x轴值防止动画时点击问题
-                this.updateTransformX();
-            }
             this.startX = e.changedTouches[0].pageX;
+            this.moveX = e.changedTouches[0].pageX;
+            this.setTranslate('none');
         },
         moving(e) {
             e.preventDefault();
             e.stopPropagation();
-            let moveX = e.changedTouches[0].pageX - this.startX;
-            this.startX = e.changedTouches[0].pageX;
+            let moveX = e.changedTouches[0].pageX - this.moveX;
+            this.moveX = e.changedTouches[0].pageX;
             let transformX = this.updateTransformX();
-            if (transformX > -(this.boxWidth + 10) / 2) {
+            if (transformX >= -(this.boxWidth + 10) / 2) {
                 let newTransformX = -(this.boxWidth + 10) * (this.imgs.length - 2) + this.transformX;
                 this.updateTransformX(newTransformX);
                 this.setTransform();
@@ -94,15 +92,16 @@ export default {
             } else {
                 this.setTransform(moveX);
             }
+            console.log(this.updateTransformX())
+            console.log(this.getIndex());
         },
         moveEnd(e) {
             e.preventDefault();
             e.stopPropagation();
-            //保存x轴值
-            this.updateTransformX();
-            if (this.transformX) {
-                
-            }
+        },
+        getIndex() {
+            let transformX = this.updateTransformX();
+            return Math.abs(Math.floor((transformX - (this.boxWidth + 10) / 2) / (this.boxWidth + 10))) - 2;
         },
         goIndex() {
             
