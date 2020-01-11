@@ -3,13 +3,17 @@
         @touchstart="moveStart"
         @touchmove="moving"
         @touchend="moveEnd">
-        <banner-item v-for="(item, index) in imgArray" :key="index">
+        <banner-item v-for="(item, ItemIndex) in imgArray" :key="ItemIndex">
              <img :src="item">
         </banner-item>
+    <ul class="banner_dotList">
+        <li v-for="(dot, dotIndex) in oldImgArray" :key="dotIndex" :class="{selectedIndex: dotIndex === index}"></li>
+    </ul>
     </div>
 </template>
 <script>
 import BannerItem from "./banner-item.vue";
+import { type } from 'os';
 export default {
     name: "banner",
     components: {
@@ -18,6 +22,7 @@ export default {
     props: ["imgs"],
     data() {
         return {
+            oldImgArray: [],
             imgArray: this.imgs,
             items: [],
             boxWidth: 0,
@@ -30,12 +35,19 @@ export default {
     },
     created() {
        if (this.imgArray.length > 1) {
+            this.oldImgArray = this.imgArray.concat();
             this.imgArray.splice(0, 0, this.imgArray[this.imgArray.length - 1]);
             this.imgArray.push(this.imgArray[1]);
+        } else {
+            this.oldImgArray = this.imgArray;
         }
     },
     mounted () {
         this.initImgs();
+        this.autoPlay();
+    },
+    beforeDestroy() {
+        typeof(this.swiperTimer) !== "undefined" ? clearInterval(this.swiperTimer) : console.log('timer不存在');
     },
     methods: {
         initImgs() {
@@ -62,20 +74,33 @@ export default {
                  item.style.transform = `translate3d(${offsetNew}px, 0, 0)`;
             });
         },
+        setTransformOfIndex(index) {
+            let offset = -(index + 1) * (this.boxWidth + 10);
+            this.items.forEach(item => {
+                 item.style.transform = `translate3d(${offset}px, 0, 0)`;
+            });
+        },
         setTranslate(duration) {
             duration = duration || this.duration;
             this.items.forEach(item => {
-                item.style.transition = this.duration + 'ms';
+                item.style.transition = duration + 'ms';
             })
         },
         moveStart(e) {
+            if (this.items.length <= 1) {
+                return
+            }
             e.preventDefault();
             e.stopPropagation();
             this.startX = e.changedTouches[0].pageX;
             this.moveX = e.changedTouches[0].pageX;
             this.setTranslate('none');
+            typeof(this.swiperTimer) !== "undefined" ? clearInterval(this.swiperTimer) : console.log('timer不存在');
         },
         moving(e) {
+            if (this.items.length <= 1) {
+                return
+            }
             e.preventDefault();
             e.stopPropagation();
             let moveX = e.changedTouches[0].pageX - this.moveX;
@@ -92,19 +117,34 @@ export default {
             } else {
                 this.setTransform(moveX);
             }
-            console.log(this.updateTransformX())
-            console.log(this.getIndex());
+            this.upDateIndex();
         },
         moveEnd(e) {
+            if (this.items.length <= 1) {
+                return
+            }
             e.preventDefault();
             e.stopPropagation();
+            this.goIndex();
+            this.autoPlay();
         },
-        getIndex() {
+        upDateIndex() {
             let transformX = this.updateTransformX();
-            return Math.abs(Math.floor((transformX - (this.boxWidth + 10) / 2) / (this.boxWidth + 10))) - 2;
+            let index = Math.abs(Math.floor((transformX - (this.boxWidth + 10) / 2) / (this.boxWidth + 10))) - 2;
+            index = index === -1 ? 0 : index === this.imgArray.length - 2 ? this.imgArray.length - 3 : index;
+            if (this.index !== index) {
+                this.index = index;
+            }
         },
         goIndex() {
-            
+            this.setTranslate(200);
+            this.setTransformOfIndex(this.index);
+        },
+        autoPlay() {
+            this.swiperTimer = setInterval(function() {
+                this.index !== this.oldImgArray.length - 1 ? this.index++ : this.index = 0;
+                this.goIndex();
+            }.bind(this), 3000);
         }
     }
 }
