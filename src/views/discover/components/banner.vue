@@ -3,8 +3,8 @@
         @touchstart="moveStart"
         @touchmove="moving"
         @touchend="moveEnd">
-        <banner-item v-for="(item, ItemIndex) in imgArray" :key="ItemIndex">
-             <img :src="item">
+        <banner-item v-for="(item, index) in imgArray" :key="item.id + index">
+             <img :src="item.src">
         </banner-item>
     <ul class="banner_dotList">
         <li v-for="(dot, dotIndex) in oldImgArray" :key="dotIndex" :class="{selectedIndex: dotIndex === index}"></li>
@@ -13,7 +13,6 @@
 </template>
 <script>
 import BannerItem from "./banner-item.vue";
-import { type } from 'os';
 export default {
     name: "banner",
     components: {
@@ -33,6 +32,21 @@ export default {
             duration: 0
         }
     },
+    watch: {
+        imgs() {
+            this.imgArray = this.imgs.concat();
+            if (this.imgArray.length > 1) {
+                this.oldImgArray = this.imgArray.concat();
+                this.imgArray.splice(0, 0, this.imgArray[this.imgArray.length - 1]);
+                this.imgArray.push(this.imgArray[1]);
+            } else {
+                this.oldImgArray = this.imgArray;
+            }
+            this.$nextTick(function() {
+              this.initImgs();
+            })
+        }
+    },
     created() {
        if (this.imgArray.length > 1) {
             this.oldImgArray = this.imgArray.concat();
@@ -45,12 +59,16 @@ export default {
     mounted () {
         this.initImgs();
         this.autoPlay();
+        window.onresize = () => {
+            this.initImgs();
+        }
     },
     beforeDestroy() {
         typeof(this.swiperTimer) !== "undefined" ? clearInterval(this.swiperTimer) : console.log('timer不存在');
     },
     methods: {
         initImgs() {
+            this.index = 0;
             this.items = this.$refs.banner.querySelectorAll('.banner_item');
             if (this.items.length > 1) {
                 this.boxWidth = this.$refs.banner.offsetWidth;
@@ -58,7 +76,6 @@ export default {
                     item.style.transform = `translate3d(${-this.boxWidth - 10}px, 0, 0)`;
                 });
                 this.updateTransformX();
-                
             } else {
                 console.log('轮播图数量小于2');
             }

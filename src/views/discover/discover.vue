@@ -17,7 +17,7 @@
 </template>
 <script>
 import banner from "./components/banner.vue";
-
+import { discoverRequest } from '../../store/api';
 export default {
     name: "discover",
     components: {
@@ -25,14 +25,30 @@ export default {
     },
     data() {
       return {
-           imgArray: ["http://p1.music.126.net/hggCzQXcwB4oe4qTra2JLw==/109951164602910186.jpg", "http://p1.music.126.net/o4TXSVd4fMj9o1nJ8iFXYQ==/109951164602906935.jpg", "http://p1.music.126.net/Jtfsz1HNm7rwCFlqVFakqQ==/109951164602919586.jpg"]
+           imgArray: []
       }  
     },
     methods: {
         
     },
     mounted() {
-        
+        discoverRequest.getBanner()
+            .then(res => {
+                if (res.status === 200) {
+                    res.data.banners.forEach(item => {
+                        this.imgArray.push({
+                            src: item.pic,
+                            id: item.bannerId
+                        })
+                    })
+                    
+                } else {
+                    console.log(`轮播图加载失败,状态码为${res.status}`)
+                }
+            })
+            .catch(error => {
+                console.log(error)
+            })
     }
 }
 </script>
