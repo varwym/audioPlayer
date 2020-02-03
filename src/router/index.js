@@ -1,19 +1,35 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import discover from '../views/discover/discover.vue'
-
+import login from '../views/login/login.vue'
+import home from '../views/Home.vue'
+import mVideo from '../views/mVideo/mVideo.vue'
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
-    name: 'discover',
-    component: discover
+    path: '/home',
+    name: 'home',
+    component: home,
+    children: [
+      {
+        path: '/',
+        component: discover
+      },
+      {
+        path: 'discover',
+        component: discover
+      },
+      {
+        path: 'video',
+        component: mVideo
+      }
+    ]
   },
   {
-    path: '/discover',
-    name: 'discover',
-    component: discover
+    path: '/login',
+    name: 'login',
+    component: login
   }
   // {
   //   path: '/about',

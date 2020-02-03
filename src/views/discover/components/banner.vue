@@ -22,39 +22,29 @@ export default {
     data() {
         return {
             oldImgArray: [],
-            imgArray: this.imgs,
+            imgArray: [],
             items: [],
             boxWidth: 0,
             index: 0,
             startX: 0,
             moveX: 0,
             transformX: 0,
-            duration: 0
+            duration: 0,
+            isListening: false
         }
     },
     watch: {
         imgs() {
-            this.imgArray = this.imgs.concat();
-            if (this.imgArray.length > 1) {
-                this.oldImgArray = this.imgArray.concat();
-                this.imgArray.splice(0, 0, this.imgArray[this.imgArray.length - 1]);
-                this.imgArray.push(this.imgArray[1]);
-            } else {
-                this.oldImgArray = this.imgArray;
-            }
+            this.imgArray = JSON.parse(JSON.stringify(this.imgs));
+            this.initImgList();
             this.$nextTick(function() {
               this.initImgs();
             })
         }
     },
     created() {
-       if (this.imgArray.length > 1) {
-            this.oldImgArray = this.imgArray.concat();
-            this.imgArray.splice(0, 0, this.imgArray[this.imgArray.length - 1]);
-            this.imgArray.push(this.imgArray[1]);
-        } else {
-            this.oldImgArray = this.imgArray;
-        }
+        this.imgArray = JSON.parse(JSON.stringify(this.imgs));
+        this.initImgList();
     },
     mounted () {
         this.initImgs();
@@ -64,9 +54,27 @@ export default {
         }
     },
     beforeDestroy() {
-        typeof(this.swiperTimer) !== "undefined" ? clearInterval(this.swiperTimer) : console.log('timer不存在');
+        if (this.swiperTimer) {
+            clearInterval(this.swiperTimer);
+            this.swiperTimer = null;
+        }
     },
     methods: {
+        initImgList() {
+            this.oldImgArray = JSON.parse(JSON.stringify(this.imgArray))
+            if (this.imgArray.length > 1) {
+                this.imgArray.splice(0, 0, this.imgArray[this.imgArray.length - 1]);
+                this.imgArray.push(this.imgArray[1]);
+            }
+        },
+        addAnimationListener(callback) {
+            if (!this.isListening) {
+                this.isListening = true;
+                this.items[0].addEventListener('transitionend', function() {
+                    callback();
+                }.bind(this))
+            }
+        },
         initImgs() {
             this.index = 0;
             this.items = this.$refs.banner.querySelectorAll('.banner_item');
@@ -76,6 +84,7 @@ export default {
                     item.style.transform = `translate3d(${-this.boxWidth - 10}px, 0, 0)`;
                 });
                 this.updateTransformX();
+                this.addAnimationListener(this.checkLastImg);
             } else {
                 console.log('轮播图数量小于2');
             }
@@ -96,6 +105,14 @@ export default {
             this.items.forEach(item => {
                  item.style.transform = `translate3d(${offset}px, 0, 0)`;
             });
+            this.$refs.banner.querySelectorAll('.banner_item');
+        },
+        checkLastImg() {
+            if (this.index === this.oldImgArray.length) {
+                this.index = 0;
+                this.setTranslate('none');
+                this.setTransformOfIndex(0);
+            }
         },
         setTranslate(duration) {
             duration = duration || this.duration;
@@ -112,7 +129,10 @@ export default {
             this.startX = e.changedTouches[0].pageX;
             this.moveX = e.changedTouches[0].pageX;
             this.setTranslate('none');
-            typeof(this.swiperTimer) !== "undefined" ? clearInterval(this.swiperTimer) : console.log('timer不存在');
+            if (this.swiperTimer) {
+                clearInterval(this.swiperTimer);
+                this.swiperTimer = null;
+            }
         },
         moving(e) {
             if (this.items.length <= 1) {
@@ -124,11 +144,11 @@ export default {
             this.moveX = e.changedTouches[0].pageX;
             let transformX = this.updateTransformX();
             if (transformX >= -(this.boxWidth + 10) / 2) {
-                let newTransformX = -(this.boxWidth + 10) * (this.imgs.length - 2) + this.transformX;
+                let newTransformX = -(this.boxWidth + 10) * (this.imgArray.length - 2) + this.transformX;
                 this.updateTransformX(newTransformX);
                 this.setTransform();
-            } else if (transformX < -(this.boxWidth + 10) * (this.imgs.length - 2) - (this.boxWidth + 10) / 2) {
-                let newTransformX = (this.boxWidth + 10) * (this.imgs.length - 2) + this.transformX;
+            } else if (transformX < -(this.boxWidth + 10) * (this.imgArray.length - 2) - (this.boxWidth + 10) / 2) {
+                let newTransformX = (this.boxWidth + 10) * (this.imgArray.length - 2) + this.transformX;
                 this.updateTransformX(newTransformX)
                 this.setTransform();
             } else {
@@ -148,7 +168,6 @@ export default {
         upDateIndex() {
             let transformX = this.updateTransformX();
             let index = Math.abs(Math.floor((transformX - (this.boxWidth + 10) / 2) / (this.boxWidth + 10))) - 2;
-            index = index === -1 ? 0 : index === this.imgArray.length - 2 ? this.imgArray.length - 3 : index;
             if (this.index !== index) {
                 this.index = index;
             }
@@ -158,8 +177,12 @@ export default {
             this.setTransformOfIndex(this.index);
         },
         autoPlay() {
+            if (this.swiperTimer) {
+                clearInterval(this.swiperTimer);
+                this.swiperTimer = null;
+            }
             this.swiperTimer = setInterval(function() {
-                this.index !== this.oldImgArray.length - 1 ? this.index++ : this.index = 0;
+                this.index !== this.oldImgArray.length ? this.index++ : this.index = 0;
                 this.goIndex();
             }.bind(this), 3000);
         }

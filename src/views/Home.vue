@@ -1,28 +1,48 @@
 <template>
-  <div>
-    <Header />
-    <Nav />
-    <div class="home_list">
-      <Banner />
-      <h5 class="home_title">推荐歌单<span>&nbsp;></span></h5>
-    </div>
-  </div>
+	<div>
+		<navigation :select="select" @onSelect="checkSelect"/>
+		<div class="list">
+			<router-view/>
+		</div>
+	</div>
 </template>
 
 <script>
-// @ is an alias to /src
-import Header from '@/components/home/Header.vue';
-import Nav from '@/components/home/Nav.vue';
-import Banner from '@/components/home/Banner.vue';
+import navigation from '../components/navigation';
+import discover from './discover/discover';
 export default {
-  name: 'Home',
-  components: {
-    Header,
-    Nav,
-    Banner
-  }
+	name: "home",
+	data() {
+		return {
+			select: 1
+		}	
+	},
+	components: {
+		navigation,
+		discover
+	},
+	created() {
+		let navigations = ["me", "discover", "square", "video"];
+		navigations.forEach((item, index) => {
+			if (window.location.href.indexOf(navigations[index]) >= 0) {
+				this.select = index;
+			}
+		})
+	},
+	methods: {
+		checkSelect(i) {
+			this.select = i;
+		}
+	}
 }
+
 </script>
 <style lang="less" scoped>
-@import "../styles/home/common.less";
+.list {
+    position: relative;
+    top: 35px;
+    left: 10px;
+    margin-top: 10px;
+    width: calc(100% - 20px);
+}
 </style>

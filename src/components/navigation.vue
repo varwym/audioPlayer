@@ -4,7 +4,7 @@
             <img src="../assets/more_button.png" alt="">
         </a>
         <ul class="navigation_options">
-            <li :class="{navigation_options_selected: selectedId === index}" v-for="(item, index) in options" :key="index" @click="navigationToPages(index)">{{item}}</li>
+            <li :class="{navigation_options_selected: selectedId === index}" v-for="(item, index) in options" :key="index + 100" @click="navigationToPages(index)">{{item}}</li>
         </ul>
         <a>
             <img src="../assets/search_button.png" alt="">
@@ -14,6 +14,15 @@
 <script>
 export default {
     name: "navigation",
+    props: ["select"],
+    watch: {
+        select() {
+            this.selectedId = this.select;
+        }
+    },
+    created() {
+        this.selectedId = this.select;  
+    },
     data () {
         return {
             options: ["我的","发现","云村","视频"],
@@ -23,6 +32,7 @@ export default {
     methods: {
         navigationToPages (index) {
             this.selectedId = index;
+            this.$emit('onSelect', index);
         }
     }
 }
