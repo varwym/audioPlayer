@@ -6,6 +6,12 @@ const discoverRequest = {
     //首页轮播
     getBanner: () => {
         return axios.get('/banner?type=1');
+    },
+    //推荐歌单
+    getSongList: (num) => {
+        if (num) 
+            return axios.get(`/personalized?limit=${num}`)
+        return axios.get('/personalized')
     }
 }
 const videoRequest = {

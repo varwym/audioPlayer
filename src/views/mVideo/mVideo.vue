@@ -44,7 +44,7 @@ export default {
             this.videoList.forEach(item => {
                 newList.push({
                     threadId: item.data.threadId,
-                    videoUrl: item.data.urlInfo.url,
+                    videoUrl: item.data.urlInfo ? item.data.urlInfo.url : null,
                     title: item.data.title ? item.data.title : item.data.name ? item.data.name : null,
                     relateSongPicUrl: item.data.relateSong && item.data.relateSong.length > 0 ? item.data.relateSong[0].al.picUrl : null,
                     bottomHeadPicUrl: typeof(item.data.creator) !== "undefined" ? item.data.creator.avatarUrl : null || typeof(item.data.artists) !== "undefined" ? item.data.artists[0].img1v1Url : null,
@@ -65,6 +65,7 @@ export default {
             videoRequest.getVideoList(id)
                 .then(res => {
                     if (res.status === 200) {
+                        this.hasmore = res.data.hasmore || false;
                         let list = [];
                         res.data.datas.forEach(item => {
                             list.push(item)

@@ -10,17 +10,38 @@
     margin-top: 15px;
     display: block;
 }
-.titleBetween {
+.songList {
     display: flex;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-}
-.common_title {
-    
-}
-.common_button {
-    
+    flex-wrap: wrap;
+    .songList_item {
+        margin-top: 10px;
+        position: relative;
+        width: 32%;
+        flex-shrink: 0;
+        p:nth-child(2) {
+            position: absolute;
+            top: 0;
+            right: 0;
+            color: white;
+            transform: scale(0.8);
+        }
+        p:nth-child(3) {
+            margin-top: 3px;
+            height: 40px;
+            overflow : hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        img {
+            width: 100%;
+            border-radius: 2px;
+        }
+    }
 }
 .option_list {
     margin-top: 10px;
