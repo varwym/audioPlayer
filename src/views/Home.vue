@@ -1,8 +1,10 @@
 <template>
 	<div>
-		<navigation :select="select" @onSelect="checkSelect"/>
+		<navigation :navigations="navigations"/>
 		<div class="list">
-			<router-view/>
+			<keep-alive>
+				<router-view/>
+			</keep-alive>
 		</div>
 	</div>
 </template>
@@ -14,20 +16,13 @@ export default {
 	name: "home",
 	data() {
 		return {
-			select: 1
+			select: 1,
+			navigations: ["me", "discover", "square", "video"]
 		}	
 	},
 	components: {
 		navigation,
 		discover
-	},
-	created() {
-		let navigations = ["me", "discover", "square", "video"];
-		navigations.forEach((item, index) => {
-			if (window.location.href.indexOf(navigations[index]) >= 0) {
-				this.select = index;
-			}
-		})
 	},
 	methods: {
 		checkSelect(i) {
@@ -39,10 +34,8 @@ export default {
 </script>
 <style lang="less" scoped>
 .list {
-    position: relative;
-    top: 35px;
-    left: 10px;
-    margin-top: 10px;
+	margin-left: 10px;
+    margin-top: 45px;
     width: calc(100% - 20px);
 }
 </style>

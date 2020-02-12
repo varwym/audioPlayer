@@ -6,7 +6,7 @@
         <banner-item v-for="(item, index) in imgArray" :key="item.id + index">
              <img :src="item.src">
         </banner-item>
-    <ul class="banner_dotList">
+    <ul class="banner-dotList">
         <li v-for="(dot, dotIndex) in oldImgArray" :key="dotIndex" :class="{selectedIndex: dotIndex === index}"></li>
     </ul>
     </div>
@@ -49,11 +49,10 @@ export default {
     mounted () {
         this.initImgs();
         this.autoPlay();
-        window.onresize = () => {
-            this.initImgs();
-        }
+        window.addEventListener("resize", this.initImgs);
     },
     beforeDestroy() {
+        window.removeEventListener("resize", this.initImgs);
         if (this.swiperTimer) {
             clearInterval(this.swiperTimer);
             this.swiperTimer = null;

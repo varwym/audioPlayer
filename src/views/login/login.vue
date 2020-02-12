@@ -1,18 +1,18 @@
 <template>
-    <div class="login_list">
-        <div class="navigation_back">
+    <div class="login-list">
+        <div class="navigation-back">
             <h2>手机号登录</h2>
         </div>
-		<div v-if="step === 0" class="login_NumberBorder">
-			<div class="login_phoneNumberAhead">+86</div>
+		<div v-if="step === 0" class="login-NumberBorder">
+			<div class="login-phoneNumberAhead">+86</div>
 			<input v-model="phoneNumber" placeholder="请输入手机号" type="number" class="login_phoneNumber" @input="getPhoneNumber">
 		</div>
-		<div v-else class="login_NumberBorder">
-			<div class="login_phoneNumberAhead">+86</div>
+		<div v-else class="login-NumberBorder">
+			<div class="login-phoneNumberAhead">+86</div>
 			<input v-model="password" placeholder="请输入密码" type="text" class="login_phoneNumber" @input="getPassWord">
 		</div>
 		
-        <div class="nextStep_button" @click="nextStepClick">下一步</div>
+        <div class="nextStep-button" @click="nextStepClick">下一步</div>
     </div>
 </template>
 <script>

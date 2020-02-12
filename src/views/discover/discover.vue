@@ -1,29 +1,34 @@
 <template>
     <div>
         <banner :imgs="imgArray"/>
-        <div class="option_list">
-            <div class="option_list_item" v-for="(option, optionIndex) in option_types" :key="optionIndex + 200">
+        <div class="option-list">
+            <div class="option-list-item" v-for="(option, optionIndex) in option_types" :key="optionIndex + 200">
                 <img :src="option_imgs[optionIndex]">
                 <span>{{option}}</span>
             </div>
         </div>
-        <span class="span_title">推荐歌单</span>
+        <span class="span-title">推荐歌单</span>
         <div class="songList">
-            <div v-for="songItem in handlePlayCount" class="songList_item" :key="songItem.id">
-                <img :src="songItem.picUrl">
-                <p>{{songItem.playCount}}</p>
-                <p>{{songItem.name}}</p>
-            </div>
+            <song-item 
+                v-for="songItem in handlePlayCount" 
+                :key="songItem.id" 
+                :picUrl="songItem.picUrl" 
+                :playCount="songItem.playCount" 
+                :name="songItem.name"
+                @click.native="pushSongDetail(songItem.id)"
+            ></song-item>
         </div>
     </div>
 </template>
 <script>
 import banner from "./components/banner.vue";
+import songItem from "./components/song-item.vue";
 import { discoverRequest } from '../../store/api';
 export default {
     name: "discover",
     components: {
-        banner
+        banner,
+        songItem
     },
     data() {
       return {
@@ -42,9 +47,9 @@ export default {
            let newSongList = this.songList.map(item => {
                item.playCount = item.playCount.toString();
                if (item.playCount.length >= 5 && item.playCount.length <= 8) {
-                   item.playCount = item.playCount.substring(0, item.length - 4) + '万';
+                   item.playCount = item.playCount.substring(0, item.playCount.length - 4) + '万';
                } else if (item.playCount.length > 8) {
-                   item.playCount = item.playCount.substring(0, item.length - 8) + '亿';
+                   item.playCount = item.playCount.substring(0, item.playCount.length - 8) + '亿';
                }
                return item;
            })
@@ -52,7 +57,9 @@ export default {
        } 
     },
     methods: {
-        
+        pushSongDetail(id) {
+            this.$router.push({path: `/dayRecommend/${id}`})
+        }
     },
     mounted() {
         discoverRequest.getBanner()
@@ -82,7 +89,7 @@ export default {
             })
             .catch(error => {
                 console.log(error)
-            })
+            })        
     }
 }
 </script>

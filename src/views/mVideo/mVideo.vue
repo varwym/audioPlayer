@@ -1,23 +1,23 @@
 <template>
-    <div class="video_list">
-        <ul class="video_options">
-            <li v-for="(video, videoIndex) in groupList" :class="{video_option_select: index === videoIndex}" :key="video.id" @click="checkGroup(videoIndex, video.id)">{{video.name}}</li>
+    <div class="video-list">
+        <ul class="video-options">
+            <li v-for="(video, videoIndex) in groupList" :class="{'video-option-select': index === videoIndex}" :key="video.id" @click="checkGroup(videoIndex, video.id)">{{video.name}}</li>
         </ul>
-        <div ref="videoItemList" class="video_item_list">
-            <div class="video_item" v-for="(videoItem, videoItemIndex) in handleVideoList" :key="videoItem.threadId">
+        <div ref="videoItemList" class="video-item-list">
+            <div class="video-item" v-for="(videoItem, videoItemIndex) in handleVideoList" :key="videoItem.threadId">
                 <video controls="controls" :src="videoItem.videoUrl"></video>
-                <div class="video_item_text">
-                    <p :class="{video_item_text_noImg:!videoItem.title}">{{videoItem.title}}</p>
+                <div class="video-item-text">
+                    <p :class="{'video-item-text-noImg':!videoItem.title}">{{videoItem.title}}</p>
                     <img v-if="videoItem.relateSongPicUrl" :src="videoItem.relateSongPicUrl">
                 </div>
-                <div v-if="videoItem.bottomHeadPicUrl" class="video_item_bottom clearfix">
-                    <img class="video_item_bottom_head" :src="videoItem.bottomHeadPicUrl">
-                    <span class="video_item_bottom_text">{{videoItem.bottomText}}</span>
-                    <div class="video_item_bottom_message">
+                <div v-if="videoItem.bottomHeadPicUrl" class="video-item-bottom clearfix">
+                    <img class="video-item-bottom-head" :src="videoItem.bottomHeadPicUrl">
+                    <span class="video-item-bottom-text">{{videoItem.bottomText}}</span>
+                    <div class="video-item-bottom-message">
                         <p>{{videoItem.commentCount}}</p>
                         <img src="../../assets/message_button.png" alt="评论">
                     </div>
-                    <div class="video_item_bottom_like">
+                    <div class="video-item-bottom-like">
                         <p>{{videoItem.likeCount}}</p>
                         <img src="../../assets/like_button1.png" alt="点赞">
                     </div>

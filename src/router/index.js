@@ -1,27 +1,25 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import discover from '../views/discover/discover.vue'
-import login from '../views/login/login.vue'
-import home from '../views/Home.vue'
-import mVideo from '../views/mVideo/mVideo.vue'
+import discover from '@/views/discover/discover.vue'
+import login from '@/views/login/login.vue'
+import home from '@/views/Home.vue'
+import mVideo from '@/views/mVideo/mVideo.vue'
+import dayRecommend from '@/views/day-recommend/day-recommend.vue'
 Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/home',
+    path: '/',
     name: 'home',
     component: home,
+    redirect: '/discover',
     children: [
       {
-        path: '/',
+        path: '/discover',
         component: discover
       },
       {
-        path: 'discover',
-        component: discover
-      },
-      {
-        path: 'video',
+        path: '/video',
         component: mVideo
       }
     ]
@@ -30,6 +28,11 @@ const routes = [
     path: '/login',
     name: 'login',
     component: login
+  },
+  {
+    path: '/dayRecommend/:id',
+    name: 'dayRecommend',
+    component: dayRecommend
   }
   // {
   //   path: '/about',
@@ -43,9 +46,9 @@ const routes = [
 ]
 
 const router = new VueRouter({
+  linkActiveClass: 'navigation-options-selected',
   mode: 'history',
   base: process.env.BASE_URL,
   routes
 })
-
 export default router

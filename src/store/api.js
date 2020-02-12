@@ -12,6 +12,12 @@ const discoverRequest = {
         if (num) 
             return axios.get(`/personalized?limit=${num}`)
         return axios.get('/personalized')
+    },
+    getSongDetail: (id) => {
+        return axios.get(`http://localhost:3000/playlist/detail?id=${id}`)
+    },
+    getRankList:() => {
+        return axios.get('/toplist/detail')
     }
 }
 const videoRequest = {

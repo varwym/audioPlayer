@@ -3,8 +3,8 @@
         <a>
             <img src="../assets/more_button.png" alt="">
         </a>
-        <ul class="navigation_options">
-            <li :class="{navigation_options_selected: selectedId === index}" v-for="(item, index) in options" :key="index + 100" @click="navigationToPages(index)">{{item}}</li>
+        <ul class="navigation-options">
+            <router-link tag="li" v-for="(item, index) in options" :key="index + 100" :to="`/${navigations[index]}`" replace>{{item}}</router-link>
         </ul>
         <a>
             <img src="../assets/search_button.png" alt="">
@@ -14,26 +14,17 @@
 <script>
 export default {
     name: "navigation",
-    props: ["select"],
-    watch: {
-        select() {
-            this.selectedId = this.select;
-        }
-    },
+    props: ["select", "navigations"],
     created() {
-        this.selectedId = this.select;  
+        
     },
     data () {
         return {
-            options: ["我的","发现","云村","视频"],
-            selectedId: 1
+            options: ["我的","发现","云村","视频"]
         }
     },
     methods: {
-        navigationToPages (index) {
-            this.selectedId = index;
-            this.$emit('onSelect', index);
-        }
+
     }
 }
 </script>

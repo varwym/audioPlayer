@@ -15,19 +15,19 @@
         width: 40px;
     }
 }
-.video_list {
+.video-list {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content:flex-start;
 }
-.video_item_list {
+.video-item-list {
     width: 100%;
     margin-top: 25px;
     background-color: white;
     overflow-y: auto;
 }
-.video_options {
+.video-options {
     position: fixed;
     top: 30px;
     left: 0;
@@ -45,33 +45,33 @@
         margin-right: 5%;
         display:inline-block;
     }
-    border-bottom: 1px solid @common_gray;
+    border-bottom: 1px solid @common-gray;
 }
-.video_options::-webkit-scrollbar {
+.video-options::-webkit-scrollbar {
     display: none;
 }
-.video_option_select {
+.video-option-select {
     position: relative;
-    color: @common_red;
+    color: @common-red;
 }
-.video_option_select:after {
+.video-option-select:after {
     content: "";
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    border-bottom: 3px solid @common_red;
+    border-bottom: 3px solid @common-red;
     transform: scaleY(.5);
     transform-origin: left bottom;
 }
-.video_item {
+.video-item {
     video {
         margin-top: 5px;
         width: 100%;
         border-radius: 10px;
     }
 }
-.video_item_text {
+.video-item-text {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -92,24 +92,24 @@
         box-sizing: border-box;
         border: 3px solid black;
     }
-    border-bottom: 1px solid @common_gray;
+    border-bottom: 1px solid @common-gray;
 }
-.video_item_text_noImg{
+.video-item-text-noImg{
     width: 100% !important;
 }
-.video_item_bottom {
+.video-item-bottom {
     margin-top: 10px;
     padding-bottom: 10px;
-    border-bottom: 5px solid @common_gray;
+    border-bottom: 5px solid @common-gray;
 }
-.video_item_bottom_head {
+.video-item-bottom-head {
     width: 30px;
     border-radius: 15px;
 }
-.video_item_bottom_text {
+.video-item-bottom-text {
     margin-left: 10px;
 }
-.video_item_bottom_like, .video_item_bottom_message {
+.video-item-bottom-like, .video-item-bottom-message {
     float: right;
     .box-img();
 }
@@ -120,25 +120,3 @@
 .clearfix:after {
     clear: both;
 }
-
-// <div ref="videoItemList" class="video_item_list">
-//             <div class="video_item" v-for="(videoItem, videoItemIndex) in videoList" :key="videoItem.data.threadId">
-//                 <video controls="controls" :src="videoItem.data.urlInfo.url"></video>
-//                 <div class="video_item_text">
-//                     <p :class="{video_item_text_noImg:!videoItem.data.relateSong || videoItem.data.relateSong.length === 0}">{{videoItem.data.title ? videoItem.data.title : videoItem.data.name}}</p>
-//                     <img v-if="videoItem.data.relateSong && videoItem.data.relateSong.length > 0" :src="videoItem.data.relateSong[0].al.picUrl">
-//                 </div>
-//                 <div v-if="videoItem.data.creator || videoItem.data.artists" class="video_item_bottom clearfix">
-//                     <img class="video_item_bottom_head" :src="videoItem.data.creator ? videoItem.data.creator.avatarUrl : videoItem.data.artists[0].img1v1Url">
-//                     <span class="video_item_bottom_text">{{videoItem.data.creator ? videoItem.data.creator.nickname : videoItem.data.artists[0].name}}</span>
-//                     <div class="video_item_bottom_message">
-//                         <p>{{videoItem.data.commentCount}}</p>
-//                         <img src="../../assets/message_button.png" alt="评论">
-//                     </div>
-//                     <div class="video_item_bottom_like">
-//                         <p>{{videoItem.data.praisedCount || videoItem.data.likeCount}}</p>
-//                         <img src="../../assets/like_button1.png" alt="点赞">
-//                     </div>
-//                 </div>
-//             </div>
-//         </div>
