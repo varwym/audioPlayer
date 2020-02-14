@@ -9,16 +9,16 @@
                 :click="goBack"
             />
             <div class="songImg-container">
-                <img :style="`animation-play-state:${isPlay ? 'running' : 'paused'}`" src="http://p1.music.126.net/RRBZ6_ROUJ711RboCQkXxA==/3417282143625721.jpg">
+                <img :class="handleAnimation" :style="[handlePlayState]" src="http://p1.music.126.net/RRBZ6_ROUJ711RboCQkXxA==/3417282143625721.jpg">
                 <player-progress />
             </div>
         </div>
         <div ref="bottomButtons" class="player-bottom-container">
-            <img class="normal-button" :src="buttons.repeat[0]">
-            <img class="normal-button" :src="buttons.last">
-            <img class="play-button" :src="buttons.play">
-            <img class="normal-button" :src="buttons.next">
-            <img class="normal-button" :src="buttons.play_list_button">
+            <img @click="handlePlayPattern" class="normal-button" :src="buttons.repeat[0]">
+            <img @click="handlePlayLast" class="normal-button" :src="buttons.last">
+            <img @click="handlePlay" class="play-button" :src="buttons.play">
+            <img @click="handlePlayNext" class="normal-button" :src="buttons.next">
+            <img @click="handlePlayList" class="normal-button" :src="buttons.play_list_button">
         </div>
     </div>
 </template>
@@ -31,6 +31,13 @@ export default {
         backButton,
         playerProgress
     },
+    computed: {
+        handlePlayState() {
+            return {
+                "animation-play-state": this.isPlay ? 'running' : 'paused' 
+            }
+        }
+    },
     mounted() {
         
     },
@@ -39,7 +46,9 @@ export default {
             backgroundImg: {
                 backgroundImage: `url('${"https://p1.music.126.net/S795Ixp1XCjuloMgX1zumA==/109951164673872675.jpg"}')`
             },
-            isPlay: false,
+            handleAnimation: "addKeyFrames",
+            isPlay: true,
+            isCheck: false,
             buttons: {
                 repeat: [require("assets/random_play_button.png")],
                 last: require("assets/last_button.png"),
@@ -51,6 +60,24 @@ export default {
         }
     },
     methods: {
+        handlePlayPattern() {
+            
+        },
+        handlePlayLast() {
+            
+        },
+        handlePlay() {
+            this.isPlay = false;
+        },
+        handlePlayNext() {
+            this.handleAnimation = "none";
+            setTimeout(function() {
+                this.handleAnimation = "addKeyFrames";    
+            }.bind(this), 1000)
+        },
+        handlePlayList() {
+            
+        },
         goBack() {
             
         }
