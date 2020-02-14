@@ -29,7 +29,7 @@ export default {
     },
     data() {
         return {
-            imgUrl: [require("../assets/black_backButton.png"), require("../assets/white_backButton.png")]
+            imgUrl: [require("assets/black_backButton.png"), require("assets/white_backButton.png")]
         }
     }
 }

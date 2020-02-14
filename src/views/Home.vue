@@ -1,5 +1,5 @@
 <template>
-	<div>
+	<div style="overflow: hidden;">
 		<navigation :navigations="navigations"/>
 		<div class="list">
 			<keep-alive>

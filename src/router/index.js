@@ -5,6 +5,7 @@ import login from '@/views/login/login.vue'
 import home from '@/views/Home.vue'
 import mVideo from '@/views/mVideo/mVideo.vue'
 import dayRecommend from '@/views/day-recommend/day-recommend.vue'
+import audioPlayer from '@/views/audio-player/audio-player.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -23,6 +24,11 @@ const routes = [
         component: mVideo
       }
     ]
+  },
+  {
+    path: '/player',
+    name: 'player',
+    component: audioPlayer
   },
   {
     path: '/login',

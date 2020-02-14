@@ -34,11 +34,11 @@ export default {
       return {
            imgArray: [],
            option_types: ['每日推荐', '歌单', '排行榜', '电台', '直播'],
-           option_imgs: [require('../../assets/date_button.png'), 
-                        require('../../assets/musicList_button.png'),
-                        require('../../assets/rank_button.png'),
-                        require('../../assets/audio_button.png'),
-                        require('../../assets/video_button.png')],
+           option_imgs: [require('assets/date_button.png'), 
+                        require('assets/musicList_button.png'),
+                        require('assets/rank_button.png'),
+                        require('assets/audio_button.png'),
+                        require('assets/video_button.png')],
            songList: []
       }  
     },

@@ -8,7 +8,7 @@
         />
         <div style="position: fixed; top: 0; left: 0; width: 100%; height: 40px; background-color: white;"></div>
         <div class="song-list-detail-container" :class="{onTopDetail: isTop}">
-            <div :class="backgroundImg" :style="backgroudImg">
+            <div :class="backgroundImg" :style="backgroundImgUrl">
             </div>
             <div class="song-list-detail">
                 <div class="song-list-detail-intro">
@@ -77,7 +77,7 @@ export default {
     data() {
         return {
             songData: null,
-            backgroudImg: {
+            backgroundImgUrl: {
                 backgroundImage: "url('')"
             },
             isTop: false   
@@ -108,7 +108,7 @@ export default {
         discoverRequest.getSongDetail(this.$route.params.id)
             .then(res => {
                 this.songData = res.data.playlist;
-                this.backgroudImg = { backgroundImage: `url('${this.songData.backgroundCoverUrl}')`};
+                this.backgroundImgUrl = { backgroundImage: `url('${this.songData.backgroundCoverUrl}')`};
                 window.addEventListener("scroll", this.touchmove);
             })
             .catch(error => {
