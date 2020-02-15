@@ -18,6 +18,9 @@ const discoverRequest = {
     },
     getRankList:() => {
         return axios.get('/toplist/detail')
+    },
+    getSong: (id) => {
+        return axios.get(`/song/url?id=${id}`)
     }
 }
 const videoRequest = {

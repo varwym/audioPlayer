@@ -32,7 +32,7 @@
             <span>播放全部</span>
         </div>
         <div class="song-list-content" :style="{marginTop: isTop ? '260px' : '0px'}">
-            <song-list-item v-for="(songItem, index) in handleSongData.tracks" :key="songItem.id" :isPlay="false" :title="songItem.alia[0] || songItem.name" :name="songItem.singer" :index="index + 1" @click.native="handlePlaySong"/>
+            <song-list-item v-for="(songItem, index) in handleSongData.tracks" :key="songItem.id" :isPlay="songItem.id === playId ? true : false" :title="songItem.alia[0] || songItem.name" :name="songItem.singer" :index="index + 1" @click.native="handlePlaySong(songItem.id, index)"/>
         </div>
     </div>
 </template>
@@ -40,12 +40,14 @@
 import songListItem from "./components/song-list-item.vue";
 import { discoverRequest } from '../../store/api';
 import backButton from "../../components/back-button.vue";
+import { mapState, mapActions } from "vuex";
 export default {
     name: "day-recommend",
     components: {
         songListItem,
         backButton
     },
+    inject: ["playSong"],
     computed: {
       handleSongData() {
           this.songData.playCount = this.songData.playCount.toString();
@@ -72,7 +74,12 @@ export default {
               'song-list-detail-background-noImg': !this.handleSongData.backgroundCoverUrl,
               'song-list-detail-background': this.handleSongData.backgroundCoverUrl
           }
-      }  
+      },
+      ...mapState({
+          playId: state => state.audio.playId,
+          songList: state => state.audio.songList,
+          songIndex: state => state.audio.index
+      })  
     },
     data() {
         return {
@@ -97,9 +104,15 @@ export default {
       handlePlayAll() {
           console.log("播放全部")
       },
-      handlePlaySong() {
-          console.log("播放单个歌曲")
-      }  
+      handlePlaySong(id, index) {
+          if (this.songList && this.handleSongData.id === this.songList.id) {
+              this.playSong(id);
+          } else {
+              this.addSongList(this.handleSongData);
+              this.playSong(id);
+          }
+      },
+      ...mapActions(['addSongList'])  
     },
     created() {
         

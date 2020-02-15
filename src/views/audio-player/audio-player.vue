@@ -16,7 +16,7 @@
         <div ref="bottomButtons" class="player-bottom-container">
             <img @click="handlePlayPattern" class="normal-button" :src="buttons.repeat[0]">
             <img @click="handlePlayLast" class="normal-button" :src="buttons.last">
-            <img @click="handlePlay" class="play-button" :src="buttons.play">
+            <img @click="handlePlay" class="play-button" :src="isPlay ? buttons.pause : buttons.play">
             <img @click="handlePlayNext" class="normal-button" :src="buttons.next">
             <img @click="handlePlayList" class="normal-button" :src="buttons.play_list_button">
         </div>
@@ -25,6 +25,7 @@
 <script>
 import backButton from "../../components/back-button.vue";
 import playerProgress from "./components/progress.vue";
+import { mapState } from "vuex";
 export default {
     name: "audio-player",
     components: {
@@ -36,7 +37,10 @@ export default {
             return {
                 "animation-play-state": this.isPlay ? 'running' : 'paused' 
             }
-        }
+        },
+        ...mapState({
+            audio: state => state.audio.audio
+        })
     },
     mounted() {
         
@@ -61,13 +65,13 @@ export default {
     },
     methods: {
         handlePlayPattern() {
-            
+            this.audio.play()
         },
         handlePlayLast() {
             
         },
         handlePlay() {
-            this.isPlay = false;
+            this.isPlay = !this.isPlay;
         },
         handlePlayNext() {
             this.handleAnimation = "none";

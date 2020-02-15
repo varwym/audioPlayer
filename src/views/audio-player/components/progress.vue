@@ -46,7 +46,6 @@ export default {
             this.left = this.$refs.progressLine.offsetWidth * this.percentage;
         },
         handleTouchMove(e) {
-            console.log(e)
             let lineWidth = this.$refs.progressLine.offsetWidth;
             let moveX = e.changedTouches[0].pageX - this.startX;
             if (moveX + this.initX <= 0) {
