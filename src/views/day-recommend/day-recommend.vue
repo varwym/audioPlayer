@@ -40,6 +40,7 @@
 import songListItem from "./components/song-list-item.vue";
 import { discoverRequest } from '../../store/api';
 import backButton from "../../components/back-button.vue";
+import { audioMixin } from "../audio-player/components/audioMixin";
 import { mapState, mapActions } from "vuex";
 export default {
     name: "day-recommend",
@@ -47,7 +48,7 @@ export default {
         songListItem,
         backButton
     },
-    inject: ["playSong"],
+    mixins: [audioMixin],
     computed: {
       handleSongData() {
           this.songData.playCount = this.songData.playCount.toString();
@@ -106,18 +107,17 @@ export default {
       },
       handlePlaySong(id, index) {
           if (this.songList && this.handleSongData.id === this.songList.id) {
-              this.playSong(id);
+              this.$nextTick(() => {
+                  this.playSong(id);        
+              })
           } else {
               this.addSongList(this.handleSongData);
-              this.playSong(id);
+              this.$nextTick(() => {
+                  this.playSong(id);        
+              })
           }
       },
-      ...mapActions(['addSongList'])  
-    },
-    created() {
-        
-    },
-    mounted() {
+      getData() {
         discoverRequest.getSongDetail(this.$route.params.id)
             .then(res => {
                 this.songData = res.data.playlist;
@@ -127,6 +127,18 @@ export default {
             .catch(error => {
                 console.log(error);
             })
+      },
+      ...mapActions(['addSongList'])  
+    },
+    created() {
+        
+    },
+    mounted() {
+        
+    },
+    activated() {
+        this.songData = null;
+        this.getData();
     },
     beforeDestroy() {
         window.removeEventListener("scroll", this.touchmove);

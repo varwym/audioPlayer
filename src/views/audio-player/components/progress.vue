@@ -17,7 +17,8 @@ export default {
             left: 0,
             initX: 0,
             startX: 0,
-            percentage: 0
+            percentage: 0,
+            isControl: false
         }
     },
     computed: {
