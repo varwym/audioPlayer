@@ -1,15 +1,18 @@
 import { discoverRequest } from "../api.js";
-class song {
-    constructor() {
-        
+class Song {
+    constructor(song) {
+        this.name = song.name || "";
+        this.picUrl = song.al ? song.al.picUrl : "";
+        this.id = song.id || "";
     }
 }
 const state = {
-    showState: 0,
+    song: new Song({}),
+    showState: -1,
     playerState: 0,
     isPlay: false,
     songList: null,
-    index: 0,
+    index: null,
     loadPercentage: 0
 }
 
@@ -22,14 +25,17 @@ const actions = {
     checkShowState ({commit}, type) {
         commit(CHECK_SHOWSTATE, type);
     },
+    checkIndex ({commit}, index) {
+        commit(CHECK_INDEX, index);
+    },
     startPlayer ({commit}) {
         commit(START_PLAYER);
     },
     pausePlayer ({commit}) {
         commit(PAUSE_PLAYER);
     },
-    addSongList ({commit}, list) {
-        commit(ADD_SONGLIST, list);
+    addSongList ({commit}, params) {
+        commit(ADD_SONGLIST, params);
     },
     lastSong ({commit}) {
         commit(LAST_SONG);
@@ -39,6 +45,7 @@ const actions = {
     }
 }
 const CHECK_SHOWSTATE = "CHECK_SHOWSTATE";
+const CHECK_INDEX = "CHECK_INDEX";
 const START_PLAYER = "START_PLAYER";
 const PAUSE_PLAYER = "PAUSE_PLAYER";
 const ADD_SONGLIST = "ADD_SONGLIST";
@@ -49,15 +56,24 @@ const mutations = {
     [CHECK_SHOWSTATE] (state, type) {
         state.showState = type;
     },
+    [CHECK_INDEX] (state, index) {
+        state.song = new Song(state.songList.tracks[index]);
+        state.index = index;
+    },
     [START_PLAYER] (state) {
         state.isPlay = true;
     },
     [PAUSE_PLAYER] (state) {
         state.isPlay = false;
     },
-    [ADD_SONGLIST] (state, list) {
-        state.index = 0;
-        state.songList = list;
+    [ADD_SONGLIST] (state, params) {
+        if (state.showState === -1) {
+            state.showState = 0;
+        }
+        state.index = params.index;
+        console.log(params.list)
+        state.song = new Song(params.list.tracks[params.index]);
+        state.songList = params.list;
     },
     [LAST_SONG] (state) {
         if (state.index !== 0) {
@@ -65,6 +81,7 @@ const mutations = {
         } else {
             state.index = state.songList.length - 1;
         }
+        state.song = new Song(state.songList.tracks[state.index]);
     },
     [NEXT_SONG] (state) {
         if (state.index === state.songList.length - 1) {
@@ -72,6 +89,7 @@ const mutations = {
         } else {
             ++state.index;
         }
+        state.song = new Song(state.songList.tracks[state.index]);
     }
 }
 export default {

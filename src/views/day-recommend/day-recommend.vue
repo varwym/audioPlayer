@@ -8,7 +8,7 @@
         />
         <div style="position: fixed; top: 0; left: 0; width: 100%; height: 40px; background-color: white;"></div>
         <div class="song-list-detail-container" :class="{onTopDetail: isTop}">
-            <div :class="backgroundImg" :style="backgroundImgUrl">
+            <div :class="backgroundImage" :style="backgroundImgUrl">
             </div>
             <div class="song-list-detail">
                 <div class="song-list-detail-intro">
@@ -32,7 +32,7 @@
             <span>播放全部</span>
         </div>
         <div class="song-list-content" :style="{marginTop: isTop ? '260px' : '0px'}">
-            <song-list-item v-for="(songItem, index) in handleSongData.tracks" :key="songItem.id" :isPlay="songItem.id === playId ? true : false" :title="songItem.alia[0] || songItem.name" :name="songItem.singer" :index="index + 1" @click.native="handlePlaySong(songItem.id, index)"/>
+            <song-list-item v-for="(songItem, index) in handleSongData.tracks" :key="songItem.id" :isPlay="songItem.id === song.id ? true : false" :title="songItem.alia[0] || songItem.name" :name="songItem.singer" :index="index + 1" @click.native="handlePlaySong(songItem.id, index)"/>
         </div>
     </div>
 </template>
@@ -70,16 +70,19 @@ export default {
             })
             return this.songData;
       },
-      backgroundImg() {
+      backgroundImage() {
           return {
               'song-list-detail-background-noImg': !this.handleSongData.backgroundCoverUrl,
               'song-list-detail-background': this.handleSongData.backgroundCoverUrl
           }
       },
+      playId() {
+            return this.songData.tracks[this.index]
+      },
       ...mapState({
-          playId: state => state.audio.playId,
           songList: state => state.audio.songList,
-          songIndex: state => state.audio.index
+          songIndex: state => state.audio.index,
+          song: state => state.audio.song
       })  
     },
     data() {
@@ -106,15 +109,16 @@ export default {
           console.log("播放全部")
       },
       handlePlaySong(id, index) {
-          if (this.songList && this.handleSongData.id === this.songList.id) {
-              this.$nextTick(() => {
-                  this.playSong(id);        
-              })
+          if (this.songList && this.handleSongData.id === this.songList.id && this.songList.tracks.length === this.handleSongData.tracks.length) {
+              if (this.song.id === id) {
+                  this.checkShowState(0);
+                  return
+              } 
+              this.checkIndex(index);
+              this.playSong(id);       
           } else {
-              this.addSongList(this.handleSongData);
-              this.$nextTick(() => {
-                  this.playSong(id);        
-              })
+              this.addSongList({list: this.handleSongData, index: index});
+              this.playSong(id);       
           }
       },
       getData() {
@@ -128,7 +132,7 @@ export default {
                 console.log(error);
             })
       },
-      ...mapActions(['addSongList'])  
+      ...mapActions(["addSongList", "checkShowState", "checkIndex"])  
     },
     created() {
         

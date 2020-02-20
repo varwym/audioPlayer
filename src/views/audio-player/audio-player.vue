@@ -1,18 +1,23 @@
 <template>
     <div v-show="songList && songList.tracks.length > 0">
+        <div style="width: 100%; height: 50px"></div>
         <transition name="fullScreen">
             <div v-if="showState === 0" class="player-container">
                 <div class="player-background" :style="backgroundImg"></div>
                 <div class="player-list">
                     <back-button 
                         :isTransparent="true"
-                        :title="'歌曲'"
+                        :title="name"
                         :isWhite="true"
                         :click="setMiniScreen"
                     />
                     <div class="songImg-container">
-                        <img :class="handleAnimation" :style="[handlePlayState]" src="http://p1.music.126.net/RRBZ6_ROUJ711RboCQkXxA==/3417282143625721.jpg">
-                        <player-progress />
+                        <img :class="handleAnimation" :style="[handlePlayState]" :src="picUrl">
+                        <player-progress 
+                            :duration="duration"
+                            :onduration="onduration"
+                            :onControl="onControl"
+                        />
                     </div>
                 </div>
                 <div ref="bottomButtons" class="player-bottom-container">
@@ -26,7 +31,7 @@
         </transition>
         <transition name="miniScreen">
             <div v-if="showState === 1" class="bottom-player-container" @click="setFullScreen">
-                <img src="http://p1.music.126.net/RRBZ6_ROUJ711RboCQkXxA==/3417282143625721.jpg" />
+                <img :src="picUrl" />
                 <div>
                     <p></p>
                     <p></p>
@@ -55,21 +60,32 @@ export default {
                 "animation-play-state": this.isPlay ? 'running' : 'paused' 
             }
         },
+        name() {
+            return this.song.name;
+        },
+        picUrl() {
+            return this.song.picUrl;
+        },
+        backgroundImg() {
+            return { backgroundImage: `url('${this.song.picUrl}')`}
+        },
         ...mapState({
             isPlay: state => state.audio.isPlay,
             songList: state => state.audio.songList,
             showState: state => state.audio.showState,
-            index: state => state.audio.index
+            index: state => state.audio.index,
+            song: state => state.audio.song
         })
     },
     mounted() {
         this.onDurition();
     },
+    beforeDestroy() {
+        let au = document.querySelector("#audioPlayer");
+        au.removeEventListener("timeupdate", this.setCurrentTime);
+    },
     data() {
         return {
-            backgroundImg: {
-                backgroundImage: `url('${"https://p1.music.126.net/S795Ixp1XCjuloMgX1zumA==/109951164673872675.jpg"}')`
-            },
             handleAnimation: "addKeyFrames",
             isCheck: false,
             buttons: {
@@ -82,24 +98,34 @@ export default {
                 next: require("assets/next_button.png"),
                 play_list_button: require("assets/play_list_button.png")
             },
-            isFirst: true
+            duration: 0,
+            onduration: 0
         }
     },
     methods: {
+        onControl(b, pe) {
+            this.isCheck = b;
+            if (!b) {
+                document.querySelector("#audioPlayer").currentTime = pe * this.duration;
+            } 
+        },
         onDurition() {
+            let this_ = this;
             let au = document.querySelector("#audioPlayer");
             au.oncanplay = function() {
-                console.log(au.duration)
+                this_.duration = au.duration;
             }
+            au.addEventListener("timeupdate", this.setCurrentTime);
         },
-        onPlay() {
-            console.log("接收消息");
+        setCurrentTime() {
+            this.onduration = document.querySelector("#audioPlayer").currentTime;
         },
         handlePlayPattern() {
-            
+            this.onduration = "123"
         },
         handlePlayLast() {
-            
+            this.lastSong();
+            this.playSong(this.song.id);
         },
         handlePlay(e) {
             e.stopPropagation();
@@ -112,10 +138,8 @@ export default {
             }
         },
         handlePlayNext() {
-            this.handleAnimation = "none";
-            setTimeout(function() {
-                this.handleAnimation = "addKeyFrames";    
-            }.bind(this), 1000)
+            this.nextSong();
+            this.playSong(this.song.id); 
         },
         handlePlayList() {
             
@@ -129,7 +153,7 @@ export default {
         setMiniScreen() {
             this.checkShowState(1);  
         },
-        ...mapActions(["checkShowState", "startPlayer", "pausePlayer"])
+        ...mapActions(["checkShowState", "startPlayer", "pausePlayer", "nextSong", "lastSong"])
     }
 }
 </script>

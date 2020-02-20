@@ -1,16 +1,21 @@
 <template>
     <div class="player-progress">
-        <p>00:00</p>
+        <p>{{getOnDuration}}</p>
         <div ref="progressLine" class="player-progress-line" @touchstart="lineTouchStart" @touchmove="handleTouchMove" @touchend="touchEnd">
             <div class="player-progress-isPlay" :style="{width: `${this.left}px`}"></div>
             <div class="player-progress-button" @touchstart="touchStart" @touchend="touchEnd" @touchmove="handleTouchMove" :style="[handleLeft, handleTransform]"></div>
         </div>
-        <p>05:00</p>
+        <p>{{getDuration}}</p>
     </div>
 </template>
 <script>
 export default {
     name: "player-progress",
+    props: {
+        duration: Number,
+        onduration: Number,
+        onControl: Function
+    },
     data() {
         return {
             isDray: false,
@@ -21,7 +26,24 @@ export default {
             isControl: false
         }
     },
+    watch: {
+        isDray() {
+            this.onControl(this.isDray, this.percentage);      
+        },
+        onduration() {
+            if (!this.isDray) {
+                this.percentage = this.onduration / this.duration;
+                this.handleResize();
+            }
+        }
+    },
     computed: {
+        getDuration() {
+            return this.handleMinToSe(this.duration);
+        },
+        getOnDuration() {
+            return this.handleMinToSe(this.onduration);
+        },
         handleTransform() {
             return {
                 transform: this.isDray ? "scale(1.2)" : null
@@ -33,9 +55,6 @@ export default {
             }
         }
     },
-    props: {
-        totalTime: String
-    },
     mounted() {
         window.addEventListener("resize", this.handleResize);
     },
@@ -43,8 +62,25 @@ export default {
         window.removeEventListener("resize", this.handleResize);
     },
     methods: {
+        handleMinToSe(duration) {
+            let min = parseInt(duration / 60);
+            let se = Math.floor(duration % 60);
+            if (min === 0 || min < 10) {
+                min = `0${min.toString()}`;
+            } else {
+                min = min.toString();
+            }
+            if (se === 0 || se  < 10) {
+                se = `0${se.toString()}`;
+            } else if (se === 60) {
+                se = '00';
+            } else {
+                se = se.toString();
+            }
+            return min + ':' + se;
+        },
         handleResize() {
-            this.left = this.$refs.progressLine.offsetWidth * this.percentage;
+            this.left = (this.$refs.progressLine.offsetWidth - 10) * this.percentage;
         },
         handleTouchMove(e) {
             let lineWidth = this.$refs.progressLine.offsetWidth;
