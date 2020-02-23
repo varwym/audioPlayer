@@ -33,7 +33,14 @@ const videoRequest = {
         return axios.get(`/video/group?id=${id}`);
     }
 }
+const loginRequest = {
+    //登录获取cookie
+    goLogin:(params) => {
+        return axios.post(`/login/cellphone?phone=${params.phoneNumber}&password=${params.password}`)
+    }
+}
 export {
     discoverRequest,
-    videoRequest
+    videoRequest,
+    loginRequest
 }

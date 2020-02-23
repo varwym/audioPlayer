@@ -1,40 +1,42 @@
 <template>
-    <div v-if="songData !== null">
-        <back-button 
-            :isTransparent="true"
-            :title="'歌单'"
-            :isWhite="true"
-            :click="goBack"
-        />
-        <div style="position: fixed; top: 0; left: 0; width: 100%; height: 40px; background-color: white;"></div>
-        <div class="song-list-detail-container" :class="{onTopDetail: isTop}">
-            <div :class="backgroundImage" :style="backgroundImgUrl">
-            </div>
-            <div class="song-list-detail">
-                <div class="song-list-detail-intro">
-                    <div class="song-list-detail-img">
-                        <img :src="handleSongData.coverImgUrl">
-                        <p>{{handleSongData.playCount}}</p>
-                    </div>
-                    <div class="song-list-detail-text">
-                        <p>{{handleSongData.name}}</p>
-                        <div>
-                            <img :src="handleSongData.creator.avatarUrl">
-                            <span>{{`${handleSongData.creator.nickname}&nbsp;>`}}</span>
+    <transition name="push" mode="out-in">
+        <div class="day-list" v-if="songData !== null">
+            <back-button 
+                :isTransparent="true"
+                :title="'歌单'"
+                :isWhite="true"
+                :click="goBack"
+            />
+            <div style="position: fixed; top: 0; left: 0; width: 100%; height: 40px; background-color: white;"></div>
+            <div class="song-list-detail-container" :class="{onTopDetail: isTop}">
+                <div :class="backgroundImage" :style="backgroundImgUrl">
+                </div>
+                <div class="song-list-detail">
+                    <div class="song-list-detail-intro">
+                        <div class="song-list-detail-img">
+                            <img :src="handleSongData.coverImgUrl">
+                            <p>{{handleSongData.playCount}}</p>
                         </div>
-                        <p>{{handleSongData.description}}</p>
+                        <div class="song-list-detail-text">
+                            <p>{{handleSongData.name}}</p>
+                            <div>
+                                <img :src="handleSongData.creator.avatarUrl">
+                                <span>{{`${handleSongData.creator.nickname}&nbsp;>`}}</span>
+                            </div>
+                            <p>{{handleSongData.description}}</p>
+                        </div>
                     </div>
                 </div>
             </div>
+            <div class="song-list-playAllButton" :class="{onTop: isTop}" @click="handlePlayAll">
+                <img src="../../assets/play_button.png">
+                <span>播放全部</span>
+            </div>
+            <div class="song-list-content" :style="{marginTop: isTop ? '260px' : '0px'}">
+                <song-list-item v-for="(songItem, index) in handleSongData.tracks" :key="songItem.id" :isPlay="songItem.id === song.id ? true : false" :title="songItem.alia[0] || songItem.name" :name="songItem.singer" :index="index + 1" @click.native="handlePlaySong(songItem.id, index)"/>
+            </div>
         </div>
-        <div class="song-list-playAllButton" :class="{onTop: isTop}" @click="handlePlayAll">
-            <img src="../../assets/play_button.png">
-            <span>播放全部</span>
-        </div>
-        <div class="song-list-content" :style="{marginTop: isTop ? '260px' : '0px'}">
-            <song-list-item v-for="(songItem, index) in handleSongData.tracks" :key="songItem.id" :isPlay="songItem.id === song.id ? true : false" :title="songItem.alia[0] || songItem.name" :name="songItem.singer" :index="index + 1" @click.native="handlePlaySong(songItem.id, index)"/>
-        </div>
-    </div>
+    </transition>
 </template>
 <script>
 import songListItem from "./components/song-list-item.vue";
@@ -125,7 +127,8 @@ export default {
         discoverRequest.getSongDetail(this.$route.params.id)
             .then(res => {
                 this.songData = res.data.playlist;
-                this.backgroundImgUrl = { backgroundImage: `url('${this.songData.backgroundCoverUrl}')`};
+                this.backgroundImgUrl = { backgroundImage: `url('${this.songData.backgroundCoverUrl || this.songData.coverImgUrl}')`};
+                console.log(this.songData)
                 window.addEventListener("scroll", this.touchmove);
             })
             .catch(error => {
@@ -141,8 +144,10 @@ export default {
         
     },
     activated() {
-        this.songData = null;
         this.getData();
+    },
+    deactivated() {
+        this.songData = null;
     },
     beforeDestroy() {
         window.removeEventListener("scroll", this.touchmove);

@@ -14,13 +14,10 @@
 <script>
 export default {
     name: "navigation",
-    props: ["select", "navigations"],
-    created() {
-        
-    },
     data () {
         return {
-            options: ["我的","发现","云村","视频"]
+            options: ["我的","发现","云村","视频"],
+            navigations: ["me", "discover", "square", "video"]
         }
     },
     methods: {

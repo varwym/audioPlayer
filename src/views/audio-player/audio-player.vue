@@ -21,7 +21,7 @@
                     </div>
                 </div>
                 <div ref="bottomButtons" class="player-bottom-container">
-                    <img @click="handlePlayPattern" class="normal-button" :src="buttons.repeat[0]">
+                    <img @click="handlePlayPattern" class="normal-button" :src="buttons.repeat[this.playerState]">
                     <img @click="handlePlayLast" class="normal-button" :src="buttons.last">
                     <img @click="handlePlay" class="play-button" :src="isPlay ? buttons.pause : buttons.play">
                     <img @click="handlePlayNext" class="normal-button" :src="buttons.next">
@@ -33,8 +33,8 @@
             <div v-if="showState === 1" class="bottom-player-container" @click="setFullScreen">
                 <img :src="picUrl" />
                 <div>
-                    <p></p>
-                    <p></p>
+                    <p>{{name}}</p>
+                    <p>{{singer}}</p>
                 </div>
                 <img :src="isPlay ? buttons.blackPause : buttons.blackPlay" @click="handlePlay">
             </div>
@@ -69,27 +69,32 @@ export default {
         backgroundImg() {
             return { backgroundImage: `url('${this.song.picUrl}')`}
         },
+        singer() {
+            return this.song.singer;
+        },
         ...mapState({
             isPlay: state => state.audio.isPlay,
             songList: state => state.audio.songList,
             showState: state => state.audio.showState,
             index: state => state.audio.index,
-            song: state => state.audio.song
+            song: state => state.audio.song,
+            playerState: state => state.audio.playerState
         })
     },
     mounted() {
-        this.onDurition();
+        this.setOnDuration();
     },
     beforeDestroy() {
         let au = document.querySelector("#audioPlayer");
         au.removeEventListener("timeupdate", this.setCurrentTime);
+        au.removeEventListener("ended", this.setEnded);
     },
     data() {
         return {
             handleAnimation: "addKeyFrames",
             isCheck: false,
             buttons: {
-                repeat: [require("assets/random_play_button.png")],
+                repeat: [require("assets/list_play_button.png"), require("assets/random_play_button.png"), require("assets/single_play_button.png")],
                 last: require("assets/last_button.png"),
                 play: require("assets/play_button.png"),
                 blackPlay: require("assets/black_play_button.png"),
@@ -109,19 +114,44 @@ export default {
                 document.querySelector("#audioPlayer").currentTime = pe * this.duration;
             } 
         },
-        onDurition() {
+        setOnDuration() {
             let this_ = this;
             let au = document.querySelector("#audioPlayer");
             au.oncanplay = function() {
                 this_.duration = au.duration;
             }
             au.addEventListener("timeupdate", this.setCurrentTime);
+            au.addEventListener("ended", this.setEnded);
         },
         setCurrentTime() {
             this.onduration = document.querySelector("#audioPlayer").currentTime;
         },
+        setEnded() {
+            switch (this.playerState) {
+                case 0: {
+                    this.nextSong();
+                    this.playSong(this.song.id);
+                    break;
+                }
+                case 1: {
+                    this.checkIndex(Math.floor(Math.random() * (this.songList.tracks.length)));
+                    this.playSong(this.song.id);
+                    break;
+                }
+                case 2: {
+                    this.playSong(this.song.id);
+                    break;
+                }
+                default:
+                    break;
+            }
+        },
         handlePlayPattern() {
-            this.onduration = "123"
+            if (this.playerState < 2) {
+                this.checkPlayerState(this.playerState + 1);
+            } else {
+                this.checkPlayerState(0);
+            }
         },
         handlePlayLast() {
             this.lastSong();
@@ -153,7 +183,7 @@ export default {
         setMiniScreen() {
             this.checkShowState(1);  
         },
-        ...mapActions(["checkShowState", "startPlayer", "pausePlayer", "nextSong", "lastSong"])
+        ...mapActions(["checkShowState", "startPlayer", "pausePlayer", "nextSong", "lastSong", "checkPlayerState", "checkIndex"])
     }
 }
 </script>

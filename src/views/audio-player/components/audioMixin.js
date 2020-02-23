@@ -1,6 +1,5 @@
 import { discoverRequest } from "../../../store/api.js";
 import { mapActions } from "vuex";
-import { mapState } from "vuex";
 export const audioMixin = {
     methods: {
         playSong(id) {

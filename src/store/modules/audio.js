@@ -1,9 +1,19 @@
-import { discoverRequest } from "../api.js";
 class Song {
     constructor(song) {
         this.name = song.name || "";
         this.picUrl = song.al ? song.al.picUrl : "";
         this.id = song.id || "";
+        let nameCombination = "";
+        if (song.ar) {
+            song.ar.forEach(name => {
+                if (nameCombination) {
+                    nameCombination += `/${name.name}`;
+                } else {
+                    nameCombination += name.name;
+                }
+            })
+        }
+        this.singer = nameCombination;
     }
 }
 const state = {
@@ -22,6 +32,9 @@ const getters = {
 }
 
 const actions = {
+    checkPlayerState ({commit}, type) {
+        commit(CHECK_PLAYERSTATE, type);
+    },
     checkShowState ({commit}, type) {
         commit(CHECK_SHOWSTATE, type);
     },
@@ -44,6 +57,8 @@ const actions = {
         commit(NEXT_SONG);
     }
 }
+
+const CHECK_PLAYERSTATE = "CHECK_PLAYERSTATE"; 
 const CHECK_SHOWSTATE = "CHECK_SHOWSTATE";
 const CHECK_INDEX = "CHECK_INDEX";
 const START_PLAYER = "START_PLAYER";
@@ -53,6 +68,9 @@ const LAST_SONG = "LAST_SONG";
 const NEXT_SONG = "NEXT_SONG";
 
 const mutations = {
+    [CHECK_PLAYERSTATE] (state, type) {
+        state.playerState = type;
+    },
     [CHECK_SHOWSTATE] (state, type) {
         state.showState = type;
     },
@@ -71,7 +89,6 @@ const mutations = {
             state.showState = 0;
         }
         state.index = params.index;
-        console.log(params.list)
         state.song = new Song(params.list.tracks[params.index]);
         state.songList = params.list;
     },
