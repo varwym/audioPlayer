@@ -2,7 +2,7 @@
     <div>
         <banner :imgs="imgArray"/>
         <div class="option-list">
-            <div class="option-list-item" v-for="(option, optionIndex) in option_types" :key="optionIndex + 200">
+            <div class="option-list-item" v-for="(option, optionIndex) in option_types" :key="optionIndex + 200" @click="goOptions(optionIndex)">
                 <img :src="option_imgs[optionIndex]">
                 <span>{{option}}</span>
             </div>
@@ -57,8 +57,47 @@ export default {
        } 
     },
     methods: {
+        goOptions(index) {
+            switch (index) {
+                case 0:
+                    break;
+                case 1:
+                    break;
+                case 2: 
+                    discoverRequest.getRankList()
+                        .then(res => {
+                            if (res.status === 200) {
+                                this.$router.push({path: '/rankList', query: { rankData: res.data }});
+                            } else {
+                                console.log("处理错误")
+                            }
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        })
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                default: 
+                    break;
+            }
+        },
         pushSongDetail(id) {
-            this.$router.push({path: `/dayRecommend/${id}`})
+            discoverRequest.getSongDetail(id)
+            .then(res => {
+                console.log(res)
+                if (res.status === 200) {
+                    this.$router.push({path: `/dayRecommend/${id}`, query: { songData: res.data.playlist }})
+                } else {
+                    console.log("处理错误")
+                }
+                
+            })
+            .catch(error => {
+                console.log(error);
+            })
         }
     },
     mounted() {
@@ -89,7 +128,7 @@ export default {
             })
             .catch(error => {
                 console.log(error)
-            })        
+            })      
     }
 }
 </script>

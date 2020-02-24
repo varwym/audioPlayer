@@ -14,7 +14,7 @@ const discoverRequest = {
         return axios.get('/personalized')
     },
     getSongDetail: (id) => {
-        return axios.get(`http://localhost:3000/playlist/detail?id=${id}`)
+        return axios.get(`/playlist/detail?id=${id}`)
     },
     getRankList:() => {
         return axios.get('/toplist/detail')

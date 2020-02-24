@@ -1,12 +1,14 @@
 <template>
-	<div style="overflow: hidden;">
-		<navigation/>
-		<div class="list">
-			<keep-alive>
-				<router-view/>
-			</keep-alive>
+	<transition name="back">
+		<div style="overflow: hidden;">
+			<navigation/>
+			<div class="list">
+				<keep-alive>
+					<router-view/>
+				</keep-alive>
+			</div>
 		</div>
-	</div>
+	</transition>
 </template>
 
 <script>

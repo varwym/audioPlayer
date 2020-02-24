@@ -6,6 +6,7 @@ import home from '@/views/Home.vue'
 import mVideo from '@/views/mVideo/mVideo.vue'
 import dayRecommend from '@/views/day-recommend/day-recommend.vue'
 import audioPlayer from '@/views/audio-player/audio-player.vue'
+import rankList from '@/views/rank-list/rank-list.vue'
 Vue.use(VueRouter)
 
 const routes = [
@@ -39,6 +40,11 @@ const routes = [
     path: '/dayRecommend/:id',
     name: 'dayRecommend',
     component: dayRecommend
+  },
+  {
+    path: '/rankList',
+    name: 'rankList',
+    component: rankList
   }
   // {
   //   path: '/about',

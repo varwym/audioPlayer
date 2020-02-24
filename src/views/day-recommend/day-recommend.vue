@@ -1,5 +1,5 @@
 <template>
-    <transition name="push" mode="out-in">
+    <transition :name="typeof(this.$route.query.songData) !== 'string' ? 'push' : ''">
         <div class="day-list" v-if="songData !== null">
             <back-button 
                 :isTransparent="true"
@@ -8,7 +8,7 @@
                 :click="goBack"
             />
             <div style="position: fixed; top: 0; left: 0; width: 100%; height: 40px; background-color: white;"></div>
-            <div class="song-list-detail-container" :class="{onTopDetail: isTop}">
+            <div class="song-list-detail-container" :class="{onTopDetail: isTop}" :style="{opacity: topOpacity}">
                 <div :class="backgroundImage" :style="backgroundImgUrl">
                 </div>
                 <div class="song-list-detail">
@@ -29,7 +29,7 @@
                 </div>
             </div>
             <div class="song-list-playAllButton" :class="{onTop: isTop}" @click="handlePlayAll">
-                <img src="../../assets/play_button.png">
+                <img src="../../assets/black_play_button.png">
                 <span>播放全部</span>
             </div>
             <div class="song-list-content" :style="{marginTop: isTop ? '260px' : '0px'}">
@@ -78,6 +78,9 @@ export default {
               'song-list-detail-background': this.handleSongData.backgroundCoverUrl
           }
       },
+      backgroundImgUrl() {
+          return { backgroundImage: `url('${this.songData.backgroundCoverUrl || this.songData.coverImgUrl}')`};
+      },
       playId() {
             return this.songData.tracks[this.index]
       },
@@ -90,10 +93,8 @@ export default {
     data() {
         return {
             songData: null,
-            backgroundImgUrl: {
-                backgroundImage: "url('')"
-            },
-            isTop: false   
+            isTop: false,
+            topOpacity: 1   
         }
     },
     methods: {
@@ -101,6 +102,7 @@ export default {
           if (window.pageYOffset >= 170) {
               !this.isTop ? this.isTop = !this.isTop : null
           } else {
+              this.topOpacity = 1 - window.pageYOffset / 250; 
               this.isTop ? this.isTop = !this.isTop : null
           }
       },
@@ -108,7 +110,11 @@ export default {
           this.$router.go(-1);
       },
       handlePlayAll() {
-          console.log("播放全部")
+          this.addSongList({
+              list: this.handleSongData,
+              index: 0
+          });
+          this.playSong(this.song.id);
       },
       handlePlaySong(id, index) {
           if (this.songList && this.handleSongData.id === this.songList.id && this.songList.tracks.length === this.handleSongData.tracks.length) {
@@ -127,9 +133,6 @@ export default {
         discoverRequest.getSongDetail(this.$route.params.id)
             .then(res => {
                 this.songData = res.data.playlist;
-                this.backgroundImgUrl = { backgroundImage: `url('${this.songData.backgroundCoverUrl || this.songData.coverImgUrl}')`};
-                console.log(this.songData)
-                window.addEventListener("scroll", this.touchmove);
             })
             .catch(error => {
                 console.log(error);
@@ -137,14 +140,22 @@ export default {
       },
       ...mapActions(["addSongList", "checkShowState", "checkIndex"])  
     },
-    created() {
-        
-    },
     mounted() {
-        
+        window.addEventListener("scroll", this.touchmove);
     },
     activated() {
-        this.getData();
+        if (typeof(this.$route.query.songData) !== 'string') {
+            this.songData = this.$route.query.songData;
+        } else {
+            discoverRequest.getSongDetail(this.$route.params.id)
+            .then(res => {
+                this.songData = res.data.playlist;
+            })
+            .catch(error => {
+                console.log(error);
+            })
+        }
+        
     },
     deactivated() {
         this.songData = null;
