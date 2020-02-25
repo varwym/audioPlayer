@@ -29,7 +29,9 @@ export default {
     },
     mounted() {
         window.addEventListener("resize", this.setHeight);
-        this.setHeight();
+        this.$refs.img.onload = function () {
+            this.setHeight();
+        }.bind(this)
     },
     beforeDestroy() {
         window.removeEventListener("resize", this.setHeight);
