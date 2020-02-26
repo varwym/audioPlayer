@@ -8,11 +8,37 @@
                 :click="goBack"
             />
             <div class="rank-list-container" v-if="rankData !== null">
-                <rankItem 
-                    :imgUrl="rankData.list[0].coverImgUrl"
-                    :update="rankData.list[0].updateFrequency"
-                    :songs="rankData.list[0].tracks"
+                <h3>官方榜</h3>
+                <rankItem v-for="rankItem in handleRankData.authority"
+                    :key="rankItem.id"
+                    :imgUrl="rankItem.coverImgUrl"
+                    :update="rankItem.updateFrequency"
+                    :songs="rankItem.tracks"
                 />
+                <h3>推荐榜</h3>
+                <div class="rank-list-row">
+                    <rank-item-row v-for="rankItemRow in handleRankData.recommend"
+                        :key="rankItemRow.id"
+                        :imgUrl="rankItemRow.coverImgUrl"
+                        :update="rankItemRow.updateFrequency"
+                    />
+                </div>
+                <h3>全球榜</h3>
+                <div class="rank-list-row">
+                    <rank-item-row v-for="rankItemRow in handleRankData.global"
+                        :key="rankItemRow.id"
+                        :imgUrl="rankItemRow.coverImgUrl"
+                        :update="rankItemRow.updateFrequency"
+                    />
+                </div>
+                <h3>更多榜单</h3>
+                <div class="rank-list-row">
+                    <rank-item-row v-for="rankItemRow in handleRankData.more"
+                        :key="rankItemRow.id"
+                        :imgUrl="rankItemRow.coverImgUrl"
+                        :update="rankItemRow.updateFrequency"
+                    />
+                </div>
             </div>
         </div>
     </transition>
@@ -20,22 +46,24 @@
 <script>
 import backButton from "src/components/back-button.vue";
 import rankItem from "src/views/rank-list/components/rank-item.vue";
+import rankItemRow from "src/views/rank-list/components/rank-item-row.vue";
 import { discoverRequest } from "src/store/api.js"; 
 export default {
     name: "rank-list",
     components: {
         backButton,
-        rankItem
+        rankItem,
+        rankItemRow
     },
     computed: {
         handleRankData() {
             let authority = [], recommend = [], global = [], more = [];
             this.rankData.list.forEach(item => {
                 switch (true) {
-                    case item.name === '云音乐飙升榜' || item.name === '云音乐新歌榜' || item.name === '网易原创歌曲榜' || item.name === '云音乐热歌榜' || item.name === '云音乐欧美新歌榜': 
+                    case item.name === '云音乐飙升榜' || item.name === '云音乐新歌榜' || item.name === '网易原创歌曲榜' || item.name === '云音乐热歌榜': 
                         authority.push(item);
                         break;
-                    case item.name === '云音乐说唱榜' || item.name === '云音乐古典音乐榜' || item.name === '云音乐电音榜' || item.name === '抖音排行榜' || item.name === '云音乐ACG音乐榜':
+                    case item.name === '云音乐说唱榜' || item.name === '云音乐古典音乐榜' || item.name === '云音乐电音榜' || item.name === '抖音排行榜' || item.name === '云音乐ACG音乐榜' || item.name === '云音乐欧美新歌榜':
                         recommend.push(item);
                         break;
                     case item.name === '英国Q杂志中文版周榜' || item.name === 'UK排行榜周榜' || item.name === '美国Billboard周榜' || item.name === 'Beatport全球电子舞曲榜' || item.name === 'iTunes榜' || item.name === '日本Oricon周榜':
