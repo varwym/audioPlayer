@@ -21,6 +21,12 @@ const discoverRequest = {
     },
     getSong: (id) => {
         return axios.get(`/song/url?id=${id}`)
+    },
+    getCatlist: () => {
+        return axios.get('/playlist/catlist');
+    },
+    getHotlist: () => {
+        return axios.get('/playlist/hot')
     }
 }
 const videoRequest = {
@@ -36,9 +42,10 @@ const videoRequest = {
 const loginRequest = {
     //登录获取cookie
     goLogin:(params) => {
-        return axios.post(`/login/cellphone?phone=${params.phoneNumber}&password=${params.password}`)
+        return axios.get(`/login/cellphone?phone=${params.phoneNumber}&password=${params.password}`)
     }
 }
+
 export {
     discoverRequest,
     videoRequest,

@@ -1,6 +1,6 @@
 <template>
     <div class="video-list">
-        <ul class="video-options">
+        <ul ref="groupUl" class="video-options">
             <li v-for="(video, videoIndex) in groupList" :class="{'video-option-select': index === videoIndex}" :key="video.id" @click="checkGroup(videoIndex, video.id)">{{video.name}}</li>
         </ul>
         <div ref="videoItemList" class="video-item-list">
@@ -60,6 +60,14 @@ export default {
         checkGroup(index, id) {
             this.index = index;
             this.getVideoList(id);
+            this.scrollToIndex(index);
+        },
+        scrollToIndex(index) {
+            let groupUl = this.$refs.groupUl;
+            let clientWidth = groupUl.clientWidth * 90 / 100;
+            let childrens = groupUl.children;
+            let scrollX = childrens[index].offsetLeft - groupUl.clientWidth * 5 / 100 - clientWidth / 2 + childrens[index].clientWidth / 2;
+            groupUl.scrollTo(scrollX, 0);   
         },
         getVideoList(id) {
             videoRequest.getVideoList(id)

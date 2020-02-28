@@ -62,6 +62,13 @@ export default {
                 case 0:
                     break;
                 case 1:
+                    discoverRequest.getHotlist()
+                        .then(res => {
+                            this.$router.push({path: '/songSheet', query: { groupList: res.data.tags }});
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        })
                     break;
                 case 2: 
                     discoverRequest.getRankList()
@@ -87,7 +94,6 @@ export default {
         pushSongDetail(id) {
             discoverRequest.getSongDetail(id)
             .then(res => {
-                console.log(res)
                 if (res.status === 200) {
                     this.$router.push({path: `/dayRecommend/${id}`, query: { songData: res.data.playlist }})
                 } else {
