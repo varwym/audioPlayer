@@ -172,7 +172,7 @@ export default {
             }
         },
         goIndex() {
-            this.setTranslate(200);
+            this.setTranslate(500);
             this.setTransformOfIndex(this.index);
         },
         autoPlay() {
