@@ -70,6 +70,7 @@ export default {
                 })
                 item.singer = nameCombination;
             })
+            console.log(this.songData)
             return this.songData;
       },
       backgroundImage() {
@@ -167,5 +168,4 @@ export default {
 </script>
 <style lang="less" scoped>
 @import "../../styles/day-recommend/day-recommend.less";
-
 </style>

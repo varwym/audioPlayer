@@ -8,6 +8,7 @@ import dayRecommend from '@/views/day-recommend/day-recommend.vue'
 import audioPlayer from '@/views/audio-player/audio-player.vue'
 import rankList from '@/views/rank-list/rank-list.vue'
 import songSheet from '@/views/song-sheet/song-sheet.vue'
+import normalRecommend from '@/views/day-recommend/normal-recommend.vue';
 Vue.use(VueRouter)
 
 const routes = [
@@ -41,6 +42,11 @@ const routes = [
     path: '/dayRecommend/:id',
     name: 'dayRecommend',
     component: dayRecommend
+  },
+  {
+    path: '/normalRecommend',
+    name: 'normalRecommend',
+    component: normalRecommend
   },
   {
     path: '/rankList',

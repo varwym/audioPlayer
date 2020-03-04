@@ -13,7 +13,6 @@ export const audioMixin = {
                     }
                 })
         },
-        
         ...mapActions(["startPlayer"])
     }
 }

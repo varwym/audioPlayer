@@ -26,7 +26,10 @@ const discoverRequest = {
         return axios.get('/playlist/catlist');
     },
     getHotlist: () => {
-        return axios.get('/playlist/hot')
+        return axios.get('/playlist/hot');
+    },
+    getDayRecommend: () => {
+        return axios.get('/recommend/songs');
     }
 }
 const videoRequest = {
