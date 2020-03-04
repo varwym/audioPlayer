@@ -60,6 +60,13 @@ export default {
         goOptions(index) {
             switch (index) {
                 case 0:
+                    discoverRequest.getDayRecommend()
+                        .then(res => {
+                            this.$router.push({path: 'normalRecommend', query: { data: res.data }})
+                        })
+                        .catch(error => {
+                            console.log(error)
+                        })
                     break;
                 case 1:
                     discoverRequest.getHotlist()

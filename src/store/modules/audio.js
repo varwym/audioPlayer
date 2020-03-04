@@ -1,19 +1,9 @@
 class Song {
     constructor(song) {
         this.name = song.name || "";
-        this.picUrl = song.al ? song.al.picUrl : "";
+        this.picUrl = song.picUrl || "";
         this.id = song.id || "";
-        let nameCombination = "";
-        if (song.ar) {
-            song.ar.forEach(name => {
-                if (nameCombination) {
-                    nameCombination += `/${name.name}`;
-                } else {
-                    nameCombination += name.name;
-                }
-            })
-        }
-        this.singer = nameCombination;
+        this.singer = song.singer || "";
     }
 }
 const state = {
@@ -75,7 +65,7 @@ const mutations = {
         state.showState = type;
     },
     [CHECK_INDEX] (state, index) {
-        state.song = new Song(state.songList.tracks[index]);
+        state.song = new Song(state.songList[index]);
         state.index = index;
     },
     [START_PLAYER] (state) {
@@ -89,7 +79,7 @@ const mutations = {
             state.showState = 0;
         }
         state.index = params.index;
-        state.song = new Song(params.list.tracks[params.index]);
+        state.song = new Song(params.list[params.index]);
         state.songList = params.list;
     },
     [LAST_SONG] (state) {
@@ -98,7 +88,7 @@ const mutations = {
         } else {
             state.index = state.songList.length - 1;
         }
-        state.song = new Song(state.songList.tracks[state.index]);
+        state.song = new Song(state.songList[state.index]);
     },
     [NEXT_SONG] (state) {
         if (state.index === state.songList.length - 1) {
@@ -106,7 +96,7 @@ const mutations = {
         } else {
             ++state.index;
         }
-        state.song = new Song(state.songList.tracks[state.index]);
+        state.song = new Song(state.songList[state.index]);
     }
 }
 export default {

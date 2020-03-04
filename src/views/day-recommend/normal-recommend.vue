@@ -1,22 +1,24 @@
 <template>
-    <div class="normal-recommend-list">
-        <back-button 
-            :isTransparent="true"
-            :title="'每日推荐'"
-            :isWhite="true"
-            :click="goBack"
-        />
-        <div class="top-view" :class="{onTopDetailNormal: isTop}">
-            <p>{{day}}</p>
+    <transition :name="typeof(this.$route.query.songData) !== 'string' ? 'push' : ''">
+        <div class="normal-recommend-list">
+            <back-button 
+                :isTransparent="true"
+                :title="'每日推荐'"
+                :isWhite="true"
+                :click="goBack"
+            />
+            <div class="top-view" :class="{onTopDetailNormal: isTop}">
+                <p>{{day}}</p>
+            </div>
+            <div class="song-list-playAllButton song-list-playAllButton-normal" :class="{onTop: isTop}" @click="handlePlayAll">
+                <img src="../../assets/black_play_button.png">
+                <span>播放全部</span>
+            </div>
+            <div class="song-list-content" v-if="songData !== null" :style="{marginTop: isTop ? '200px' : '0px'}">
+                <song-list-item v-for="(songItem, index) in handleSongData" :key="songItem.id" :isPlay="songItem.id === song.id ? true : false" :title="songItem.name" :name="songItem.singer" :index="index + 1" @click.native="handlePlaySong(songItem.id, index)"/>
+            </div>
         </div>
-        <div class="song-list-playAllButton song-list-playAllButton-normal" :class="{onTop: isTop}" @click="handlePlayAll">
-            <img src="../../assets/black_play_button.png">
-            <span>播放全部</span>
-        </div>
-        <div class="song-list-content" v-if="songData !== null" :style="{marginTop: isTop ? '200px' : '0px'}">
-            <song-list-item v-for="(songItem, index) in handleSongData" :key="songItem.id" :isPlay="songItem.id === song.id ? true : false" :title="songItem.name" :name="songItem.singer" :index="index + 1" @click.native="handlePlaySong(songItem.id, index)"/>
-        </div>
-    </div>
+    </transition>
 </template>
 <script>
 import backButton from "src/components/back-button.vue";
@@ -52,33 +54,47 @@ export default {
                 item.singer = nameCombination;
             })
             return this.songData;
-      },
-      day() {
+        },
+        day() {
             let date = new Date();
             return date.getDate() + ' / ' + (date.getMonth() + 1).toString();
-      },
-      ...mapState({
-          songList: state => state.audio.songList,
-          songIndex: state => state.audio.index,
-          song: state => state.audio.song
-      })  
+        },
+        ...mapState({
+            songList: state => state.audio.songList,
+            songIndex: state => state.audio.index,
+            song: state => state.audio.song
+        })  
     },
     mounted() {
         window.addEventListener("scroll", this.touchmove);
-        discoverRequest.getDayRecommend()
-            .then(res => {
-                this.songData = res.data.recommend;
-            })
-            .catch(error => {
-                console.log(error)
-            })
     },
     beforeDestroy() {
         window.removeEventListener("scroll", this.touchmove);
     },
+    activated() {
+        if (typeof this.$route.query.data !== 'undefined' && typeof this.$route.query.data !== 'string') {
+            this.songData = this.$route.query.data.recommend;
+        } else {
+            discoverRequest.getDayRecommend()
+                .then(res => {
+                    this.songData = res.data.recommend;
+                })
+                .catch(error => {
+                    console.log(error)
+                })
+        }
+    },
     methods: {
+        checkList(val, oldval) {
+            for (let i=0; i<val.length; i++) {
+                if (val[i].id !== oldval[i].id) {
+                    return false
+                }
+            }
+            return true;
+        },
         handlePlaySong(id, index) {
-            if (this.songList && this.handleSongData.id === this.songList.id && this.songList.tracks.length === this.handleSongData.tracks.length) {
+            if (this.songList && this.checkList(this.songList, this.handleSongData) && this.songList.length === this.handleSongData.length) {
                 if (this.song.id === id) {
                     this.checkShowState(0);
                     return
@@ -86,8 +102,27 @@ export default {
                 this.checkIndex(index);
                 this.playSong(id);       
             } else {
-                this.addSongList({list: this.handleSongData, index: index});
-                this.playSong(id);       
+                let newList = [];
+                this.handleSongData.forEach(item => {
+                    let nameCombination = "";
+                    item.artists.forEach(name => {
+                        if (nameCombination) {
+                            nameCombination += `/${name.name}`;
+                        } else {
+                            nameCombination += name.name;
+                        }
+                    })
+                    item.album.name ? nameCombination += `-${item.album.name}` : null;
+                    item.singer = nameCombination;
+                    newList.push({
+                        singer: item.singer,
+                        name: item.name,
+                        id: item.id,
+                        picUrl:item.album ? item.album.picUrl : ""
+                    })
+                })
+                this.addSongList({list: newList, index: index});
+                this.playSong(id);          
             }
         },
         touchmove() {

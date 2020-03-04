@@ -1,5 +1,5 @@
 <template>
-    <div v-show="songList && songList.tracks.length > 0">
+    <div v-show="songList && songList.length > 0">
         <div style="width: 100%; height: 50px"></div>
         <transition name="fullScreen">
             <div v-if="showState === 0" class="player-container">
@@ -134,7 +134,7 @@ export default {
                     break;
                 }
                 case 1: {
-                    this.checkIndex(Math.floor(Math.random() * (this.songList.tracks.length)));
+                    this.checkIndex(Math.floor(Math.random() * (this.songList.length)));
                     this.playSong(this.song.id);
                     break;
                 }

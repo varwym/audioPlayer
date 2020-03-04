@@ -54,7 +54,7 @@ export default {
         }
     },
     mounted() {
-        if (typeof(this.$route.query.groupList[0]) !== 'string') {
+        if (typeof this.$route.query.groupList !== 'undefined' && typeof this.$route.query.groupList[0] !== 'string') {
             this.groupList = this.$route.query.groupList;
         } else {
             this.getGroups();

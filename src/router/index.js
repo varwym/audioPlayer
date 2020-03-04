@@ -39,6 +39,12 @@ const routes = [
     component: login
   },
   {
+    path: '/dayRecommend',
+    name: 'dayRecommend',
+    component: dayRecommend,
+    redirect: '/'
+  },
+  {
     path: '/dayRecommend/:id',
     name: 'dayRecommend',
     component: dayRecommend

@@ -89,7 +89,7 @@ export default {
         
     },
     activated() {
-        if (typeof(this.$route.query.rankData) !== 'string') {
+        if (typeof this.$route.query.rankData !== 'undefined' && typeof this.$route.query.rankData !== 'string') {
             this.rankData = this.$route.query.rankData;
         } else {
             discoverRequest.getRankList()

@@ -70,7 +70,6 @@ export default {
                 })
                 item.singer = nameCombination;
             })
-            console.log(this.songData)
             return this.songData;
       },
       backgroundImage() {
@@ -117,8 +116,16 @@ export default {
           });
           this.playSong(this.song.id);
       },
+      checkList(val, oldval) {
+          for (let i=0; i<val.length; i++) {
+              if (val[i].id !== oldval.tracks[i].id) {
+                  return false
+              }
+          }
+          return true;
+      },
       handlePlaySong(id, index) {
-          if (this.songList && this.handleSongData.id === this.songList.id && this.songList.tracks.length === this.handleSongData.tracks.length) {
+          if (this.songList && this.songList.length === this.handleSongData.tracks.length && this.checkList(this.songList, this.handleSongData)) {
               if (this.song.id === id) {
                   this.checkShowState(0);
                   return
@@ -126,7 +133,25 @@ export default {
               this.checkIndex(index);
               this.playSong(id);       
           } else {
-              this.addSongList({list: this.handleSongData, index: index});
+              let newList = [];
+              this.handleSongData.tracks.forEach(item => {
+                    let nameCombination = "";
+                    item.ar.forEach(name => {
+                        if (nameCombination) {
+                            nameCombination += `/${name.name}`;
+                        } else {
+                            nameCombination += name.name;
+                        }
+                    })
+                item.singer = nameCombination;
+                newList.push({
+                    singer: item.singer,
+                    name: item.name,
+                    id: item.id,
+                    picUrl:item.al ? item.al.picUrl : ""
+                })
+              })
+              this.addSongList({list: newList, index: index});
               this.playSong(id);       
           }
       },
@@ -145,16 +170,17 @@ export default {
         window.addEventListener("scroll", this.touchmove);
     },
     activated() {
-        if (typeof(this.$route.query.songData) !== 'string') {
+        if (typeof this.$route.query.songData !== 'undefined' && typeof this.$route.query.songData !== 'string') {
             this.songData = this.$route.query.songData;
         } else {
             discoverRequest.getSongDetail(this.$route.params.id)
-            .then(res => {
-                this.songData = res.data.playlist;
-            })
-            .catch(error => {
-                console.log(error);
-            })
+                .then(res => {
+                    this.songData = res.data.playlist;
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+            
         }
         
     },
