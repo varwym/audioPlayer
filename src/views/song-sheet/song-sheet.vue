@@ -1,6 +1,6 @@
 <template>
-    <transition name="push">
-        <div class="song-sheet">
+    <transition :name="typeof this.$route.params.groupList !== 'undefined' ? 'push' : ''">
+        <div class="song-sheet" v-if="groupList !== null">
             <back-button 
                 :isTransparent="false"
                 :title="'歌单'"
@@ -53,12 +53,18 @@ export default {
             this.$router.go(-1);
         }
     },
-    mounted() {
-        if (typeof this.$route.query.groupList !== 'undefined' && typeof this.$route.query.groupList[0] !== 'string') {
-            this.groupList = this.$route.query.groupList;
+    activated() {
+        if (typeof this.$route.params.groupList !== 'undefined') {
+            this.groupList = this.$route.params.groupList;
         } else {
             this.getGroups();
         }
+    },
+    deactivated() {
+        this.groupList = null;
+    },
+    mounted() {
+        
     }
 }
 </script>

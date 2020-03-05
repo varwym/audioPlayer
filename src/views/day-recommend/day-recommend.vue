@@ -1,5 +1,5 @@
 <template>
-    <transition :name="typeof(this.$route.query.songData) !== 'string' ? 'push' : ''">
+    <transition :name="typeof this.$route.params.songData !== 'undefined' ? 'push' : ''">
         <div class="day-list" v-if="songData !== null">
             <back-button 
                 :isTransparent="true"
@@ -170,10 +170,10 @@ export default {
         window.addEventListener("scroll", this.touchmove);
     },
     activated() {
-        if (typeof this.$route.query.songData !== 'undefined' && typeof this.$route.query.songData !== 'string') {
-            this.songData = this.$route.query.songData;
+        if (typeof this.$route.params.songData !== 'undefined') {
+            this.songData = this.$route.params.songData;
         } else {
-            discoverRequest.getSongDetail(this.$route.params.id)
+            discoverRequest.getSongDetail(this.$route.query.id)
                 .then(res => {
                     this.songData = res.data.playlist;
                 })

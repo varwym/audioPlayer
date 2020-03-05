@@ -1,5 +1,5 @@
 <template>
-    <transition :name="typeof(this.$route.query.songData) !== 'string' ? 'push' : ''">
+    <transition :name="typeof(this.$route.params.data) !== 'undefined' ? 'push' : ''">
         <div class="normal-recommend-list">
             <back-button 
                 :isTransparent="true"
@@ -72,8 +72,8 @@ export default {
         window.removeEventListener("scroll", this.touchmove);
     },
     activated() {
-        if (typeof this.$route.query.data !== 'undefined' && typeof this.$route.query.data !== 'string') {
-            this.songData = this.$route.query.data.recommend;
+        if (typeof this.$route.params.data !== 'undefined') {
+            this.songData = this.$route.params.data.recommend;
         } else {
             discoverRequest.getDayRecommend()
                 .then(res => {

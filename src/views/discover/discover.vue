@@ -62,7 +62,7 @@ export default {
                 case 0:
                     discoverRequest.getDayRecommend()
                         .then(res => {
-                            this.$router.push({path: 'normalRecommend', query: { data: res.data }})
+                            this.$router.push({name: 'normalRecommend', params: { data: res.data }})
                         })
                         .catch(error => {
                             console.log(error)
@@ -71,7 +71,7 @@ export default {
                 case 1:
                     discoverRequest.getHotlist()
                         .then(res => {
-                            this.$router.push({path: '/songSheet', query: { groupList: res.data.tags }});
+                            this.$router.push({name: 'songSheet', params: { groupList: res.data.tags }});
                         })
                         .catch(error => {
                             console.log(error)
@@ -81,7 +81,7 @@ export default {
                     discoverRequest.getRankList()
                         .then(res => {
                             if (res.status === 200) {
-                                this.$router.push({path: '/rankList', query: { rankData: res.data }});
+                                this.$router.push({name: 'rankList', params: { rankData: res.data }});
                             } else {
                                 console.log("处理错误")
                             }
@@ -102,7 +102,7 @@ export default {
             discoverRequest.getSongDetail(id)
             .then(res => {
                 if (res.status === 200) {
-                    this.$router.push({path: `/dayRecommend/${id}`, query: { songData: res.data.playlist }})
+                    this.$router.push({name: 'dayRecommend', params: { songData: res.data.playlist }, query: { id: id }})
                 } else {
                     console.log("处理错误")
                 }

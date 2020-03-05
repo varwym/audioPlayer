@@ -41,12 +41,6 @@ const routes = [
   {
     path: '/dayRecommend',
     name: 'dayRecommend',
-    component: dayRecommend,
-    redirect: '/'
-  },
-  {
-    path: '/dayRecommend/:id',
-    name: 'dayRecommend',
     component: dayRecommend
   },
   {
@@ -77,7 +71,6 @@ const routes = [
 
 const router = new VueRouter({
   linkActiveClass: 'navigation-options-selected',
-  mode: 'history',
   base: process.env.BASE_URL,
   routes
 })

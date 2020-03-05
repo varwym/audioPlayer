@@ -1,6 +1,6 @@
 <template>
-    <transition name="push">
-        <div class="rank-list">
+    <transition :name="typeof this.$route.params.rankData !== 'undefined' ? 'push' : ''">
+        <div class="rank-list" v-if="rankData !== null">
             <back-button 
                 :isTransparent="false"
                 :title="'排行榜'"
@@ -30,7 +30,7 @@
                         :imgUrl="rankItemRow.coverImgUrl"
                         :update="rankItemRow.updateFrequency"
                     />
-                </div>
+                </div>groupList
                 <h3>更多榜单</h3>
                 <div class="rank-list-row">
                     <rank-item-row v-for="rankItemRow in handleRankData.more"
@@ -89,8 +89,8 @@ export default {
         
     },
     activated() {
-        if (typeof this.$route.query.rankData !== 'undefined' && typeof this.$route.query.rankData !== 'string') {
-            this.rankData = this.$route.query.rankData;
+        if (typeof this.$route.params.rankData !== 'undefined') {
+            this.rankData = this.$route.params.rankData;
         } else {
             discoverRequest.getRankList()
                 .then(res => {
