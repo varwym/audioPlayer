@@ -1,5 +1,5 @@
 <template>
-    <transition :name="typeof this.$route.params.rankData !== 'undefined' ? 'push' : ''">
+    <transition name="fade">
         <div class="rank-list" v-if="rankData !== null">
             <back-button 
                 :isTransparent="false"
@@ -14,6 +14,7 @@
                     :imgUrl="rankItem.coverImgUrl"
                     :update="rankItem.updateFrequency"
                     :songs="rankItem.tracks"
+                    @click.native="pushSongDetail(rankItem.id)"
                 />
                 <h3>推荐榜</h3>
                 <div class="rank-list-row">
@@ -21,6 +22,7 @@
                         :key="rankItemRow.id"
                         :imgUrl="rankItemRow.coverImgUrl"
                         :update="rankItemRow.updateFrequency"
+                        @click.native="pushSongDetail(rankItemRow.id)"
                     />
                 </div>
                 <h3>全球榜</h3>
@@ -29,6 +31,7 @@
                         :key="rankItemRow.id"
                         :imgUrl="rankItemRow.coverImgUrl"
                         :update="rankItemRow.updateFrequency"
+                        @click.native="pushSongDetail(rankItemRow.id)"
                     />
                 </div>groupList
                 <h3>更多榜单</h3>
@@ -37,6 +40,7 @@
                         :key="rankItemRow.id"
                         :imgUrl="rankItemRow.coverImgUrl"
                         :update="rankItemRow.updateFrequency"
+                        @click.native="pushSongDetail(rankItemRow.id)"
                     />
                 </div>
             </div>
@@ -109,6 +113,20 @@ export default {
         this.rankData = null;
     },
     methods: {
+        pushSongDetail(id) {
+            discoverRequest.getSongDetail(id)
+                .then(res => {
+                    if (res.status === 200) {
+                        this.$router.push({name: 'dayRecommend', params: { songData: res.data.playlist }, query: { id: id }})
+                    } else {
+                        console.log("处理错误")
+                    }
+                    
+                })
+                .catch(error => {
+                    console.log(error);
+                })  
+        },
         goBack() {
           this.$router.go(-1);
         }

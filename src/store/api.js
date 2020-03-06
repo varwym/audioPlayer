@@ -5,7 +5,7 @@ axios.defaults.withCredentials=true;
 const discoverRequest = {
     //首页轮播
     getBanner: () => {
-        return axios.get('/banner?type=1');
+        return axios.get('/banner?type=1')
     },
     //推荐歌单
     getSongList: (num) => {
@@ -23,29 +23,33 @@ const discoverRequest = {
         return axios.get(`/song/url?id=${id}`)
     },
     getCatlist: () => {
-        return axios.get('/playlist/catlist');
+        return axios.get('/playlist/catlist')
     },
     getHotlist: () => {
         return axios.get('/playlist/hot');
     },
     getDayRecommend: () => {
-        return axios.get('/recommend/songs');
+        return axios.get('/recommend/songs')
     }
 }
 const videoRequest = {
     //视频分组
     getVideoGroup: () => {
-        return axios.get('/video/group/list');
+        return axios.get('/video/group/list')
     },
     //查询分组下视频列表
     getVideoList: (id) => {
-        return axios.get(`/video/group?id=${id}`);
+        return axios.get(`/video/group?id=${id}`)
     }
 }
 const loginRequest = {
     //登录获取cookie
     goLogin:(params) => {
         return axios.get(`/login/cellphone?phone=${params.phoneNumber}&password=${params.password}`)
+    },
+    //获取登录状态
+    getStatus:() => {
+        return axios.get('/login/status')
     }
 }
 

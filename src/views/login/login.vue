@@ -24,8 +24,11 @@ export default {
 	components: {
 		backButton
 	},
-	mounted() {
-		console.log(document.cookie)	
+	mounted() {	
+		loginRequest.getStatus()
+			.then(res=> {
+				console.log(res)
+			})
 	},
     data() {
         return {

@@ -1,5 +1,5 @@
 <template>
-    <transition :name="typeof this.$route.params.songData !== 'undefined' ? 'push' : ''">
+    <transition name="fade">
         <div class="day-list" v-if="songData !== null">
             <back-button 
                 :isTransparent="true"
@@ -74,8 +74,8 @@ export default {
       },
       backgroundImage() {
           return {
-              'song-list-detail-background-noImg': !this.handleSongData.backgroundCoverUrl,
-              'song-list-detail-background': this.handleSongData.backgroundCoverUrl
+              'song-list-detail-background-noImg': !this.handleSongData.backgroundCoverUrl && !this.songData.coverImgUrl,
+              'song-list-detail-background': this.handleSongData.backgroundCoverUrl || this.songData.coverImgUrl
           }
       },
       backgroundImgUrl() {

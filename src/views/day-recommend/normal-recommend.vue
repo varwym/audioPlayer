@@ -1,5 +1,5 @@
 <template>
-    <transition :name="typeof(this.$route.params.data) !== 'undefined' ? 'push' : ''">
+    <transition name="fade">
         <div class="normal-recommend-list">
             <back-button 
                 :isTransparent="true"

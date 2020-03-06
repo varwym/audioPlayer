@@ -100,17 +100,17 @@ export default {
         },
         pushSongDetail(id) {
             discoverRequest.getSongDetail(id)
-            .then(res => {
-                if (res.status === 200) {
-                    this.$router.push({name: 'dayRecommend', params: { songData: res.data.playlist }, query: { id: id }})
-                } else {
-                    console.log("处理错误")
-                }
-                
-            })
-            .catch(error => {
-                console.log(error);
-            })
+                .then(res => {
+                    if (res.status === 200) {
+                        this.$router.push({name: 'dayRecommend', params: { songData: res.data.playlist }, query: { id: id }})
+                    } else {
+                        console.log("处理错误")
+                    }
+                    
+                })
+                .catch(error => {
+                    console.log(error);
+                })
         }
     },
     mounted() {
