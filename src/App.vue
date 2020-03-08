@@ -21,9 +21,4 @@ export default {
 #app {
   height: 100%;
 }
-.audio-seat {
-	width: 100%;
-	height: 50px;
-	background-color: white;
-}
 </style>

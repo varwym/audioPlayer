@@ -45,13 +45,14 @@ export default {
     computed: {
        handlePlayCount() {
            let newSongList = this.songList.map(item => {
-               item.playCount = item.playCount.toString();
-               if (item.playCount.length >= 5 && item.playCount.length <= 8) {
-                   item.playCount = item.playCount.substring(0, item.playCount.length - 4) + '万';
-               } else if (item.playCount.length > 8) {
-                   item.playCount = item.playCount.substring(0, item.playCount.length - 8) + '亿';
+               let newItem = JSON.parse(JSON.stringify(item));
+               newItem.playCount = newItem.playCount.toString();
+               if (newItem.playCount.length >= 5 && newItem.playCount.length <= 8) {
+                   newItem.playCount = newItem.playCount.substring(0, newItem.playCount.length - 4) + '万';
+               } else if (newItem.playCount.length > 8) {
+                   newItem.playCount = newItem.playCount.substring(0, newItem.playCount.length - 8) + '亿';
                }
-               return item;
+               return newItem;
            })
            return newSongList;
        } 
@@ -62,19 +63,22 @@ export default {
                 case 0:
                     discoverRequest.getDayRecommend()
                         .then(res => {
-                            this.$router.push({name: 'normalRecommend', params: { data: res.data }})
+                            if (res.status === 200) {
+                                this.$router.push({name: 'normalRecommend', params: { data: res.data }})
+                            }
                         })
                         .catch(error => {
-                            console.log(error)
+                            if (error.response.status === 301) {
+                                this.$router.push({name: 'login', params: { push: 'normalRecommend' }})
+                            }
                         })
                     break;
                 case 1:
                     discoverRequest.getHotlist()
                         .then(res => {
-                            this.$router.push({name: 'songSheet', params: { groupList: res.data.tags }});
-                        })
-                        .catch(error => {
-                            console.log(error)
+                            if (res.status === 200) {
+                                this.$router.push({name: 'songSheet', params: { groupList: res.data.tags }});
+                            }
                         })
                     break;
                 case 2: 
@@ -82,12 +86,7 @@ export default {
                         .then(res => {
                             if (res.status === 200) {
                                 this.$router.push({name: 'rankList', params: { rankData: res.data }});
-                            } else {
-                                console.log("处理错误")
                             }
-                        })
-                        .catch(error => {
-                            console.log(error)
                         })
                     break;
                 case 3:

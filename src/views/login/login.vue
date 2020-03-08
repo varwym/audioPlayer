@@ -1,20 +1,22 @@
 <template>
-    <div class="login-list">
-        <back-button 
-			:isTransparent="false"
-			:title="title"
-			:isWhite="false"
-			:click="back"
-		/>
-		<div v-if="step === 0" class="login-NumberBorder">
-			<div class="login-phoneNumberAhead">+86</div>
-			<input v-model="phoneNumber" placeholder="请输入手机号" type="number" class="login_phoneNumber" @input="getPhoneNumber">
+	<transition name="fade">
+		<div class="login-list">
+			<back-button 
+				:isTransparent="false"
+				:title="title"
+				:isWhite="false"
+				:click="back"
+			/>
+			<div v-if="step === 0" class="login-NumberBorder">
+				<div class="login-phoneNumberAhead">+86</div>
+				<input v-model="phoneNumber" placeholder="请输入手机号" type="number" class="login_phoneNumber" @input="getPhoneNumber">
+			</div>
+			<div v-else class="login-NumberBorder">
+				<input v-model="password" placeholder="请输入密码" type="text" class="login_phoneNumber" @input="getPassWord" style="width: 100%; padding-left: 0px;">
+			</div>
+			<div class="nextStep-button" @click="nextStepClick">下一步</div>
 		</div>
-		<div v-else class="login-NumberBorder">
-			<input v-model="password" placeholder="请输入密码" type="text" class="login_phoneNumber" @input="getPassWord" style="width: 100%; padding-left: 0px;">
-		</div>
-        <div class="nextStep-button" @click="nextStepClick">下一步</div>
-    </div>
+	</transition>
 </template>
 <script>
 import backButton from "../../components/back-button";
@@ -25,10 +27,10 @@ export default {
 		backButton
 	},
 	mounted() {	
-		loginRequest.getStatus()
-			.then(res=> {
-				console.log(res)
-			})
+		// loginRequest.getStatus()
+		// 	.then(res=> {
+		// 		console.log(res)
+		// 	})
 	},
     data() {
         return {
@@ -59,7 +61,7 @@ export default {
 						phoneNumber: this.phoneNumber.toString(),
 						password: this.password
 					}).then(res => {
-						console.log(res)
+						this.$router.replace({name: this.$route.params.push});
 					})
 				}
 			}

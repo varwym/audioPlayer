@@ -30,6 +30,12 @@ const discoverRequest = {
     },
     getDayRecommend: () => {
         return axios.get('/recommend/songs')
+    },
+    getRelated: (id) => {
+        return axios.get(`/related/playlist?id=${id}`)
+    },
+    getPlaylist: (cat, updateTime) => {
+        return axios.get(`/top/playlist?cat=${cat}&limit=30&before=${updateTime ? updateTime : ""}`)
     }
 }
 const videoRequest = {

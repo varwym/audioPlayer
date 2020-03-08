@@ -1,9 +1,77 @@
+@import "../common.less";
 .song-sheet {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
+    position: relative;
     background-color: white;
     z-index: 200;
+}
+.video-options {
+    position: relative;
+    left: 5%;
+    line-height: 30px;
+    width: 90%;
+    white-space: nowrap;
+    overflow-x: auto;
+    list-style: none;
+    z-index: 100;
+    background-color: white;
+    li {
+        margin-right: 5%;
+        display:inline-block;
+    }
+    border-bottom: 1px solid @common-gray;
+}
+.video-options::-webkit-scrollbar {
+    display: none;
+}
+.video-option-select {
+    position: relative;
+    color: @common-red;
+}
+.video-option-select:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border-bottom: 3px solid @common-red;
+    transform: scaleY(.5);
+    transform-origin: left bottom;
+}
+.sheet-list {
+    position: relative;
+    left: 10px;
+    margin-top: 70px;
+    width: calc(100% - 20px);
+    height: calc(100% - 80px);
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    overflow-y: scroll;
+}
+.sheet-list::-webkit-scrollbar {
+    display: none;
+}
+.get-all {
+    position: fixed;
+    right: 0px;
+    top: 40px;
+    width: 10%;
+    height: 31px;
+    z-index: 100;
+    img {
+        position: absolute;
+        width: 16px;
+        right: 10px;
+        top: 7px;
+    }
+    background-color: white;
+}
+.group-div {
+    position: fixed;
+    top: 40px;
+    width: 100%;
+    z-index: 100;
+    background-color: white;
 }
