@@ -15,28 +15,32 @@
                     <img :src="buttons.all" @click="getAll">
                 </div>
             </div>
-            <div class="sheet-list" v-if="songList">
-                <song-item 
-                    v-for="songItem in handlePlayCount" 
-                    :key="songItem.id" 
-                    :picUrl="songItem.coverImgUrl" 
-                    :playCount="songItem.playCount" 
-                    :name="songItem.name"
-                    @click.native="pushSongDetail(songItem.id)"
-                ></song-item>
-            </div>
+            <scroll-up>
+                <div class="sheet-list" v-if="songList">
+                    <song-item 
+                        v-for="songItem in handlePlayCount" 
+                        :key="songItem.id" 
+                        :picUrl="songItem.coverImgUrl" 
+                        :playCount="songItem.playCount" 
+                        :name="songItem.name"
+                        @click.native="pushSongDetail(songItem.id)"
+                    ></song-item>
+                </div>
+            </scroll-up>
         </div>
     </transition>
 </template>
 <script>
 import backButton from "src/components/back-button.vue";
 import songItem from "../discover/components/song-item.vue";
+import scrollUp from "src/components/scroll-up.vue";
 import { discoverRequest } from "src/store/api.js";
 export default {
     name: "song-sheet",
     components: {
         backButton,
-        songItem
+        songItem,
+        scrollUp
     },
     data() {
         return {
@@ -64,6 +68,9 @@ export default {
        } 
     },
     methods: {
+        nextPage() {
+            console.log("到底翻页");
+        },
         scrollToIndex(index) {
             let groupUl = this.$refs.groupUl;
             let clientWidth = groupUl.clientWidth * 90 / 100;
