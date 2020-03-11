@@ -34,8 +34,8 @@ const discoverRequest = {
     getRelated: (id) => {
         return axios.get(`/related/playlist?id=${id}`)
     },
-    getPlaylist: (cat, updateTime) => {
-        return axios.get(`/top/playlist?cat=${cat}&limit=30&before=${updateTime ? updateTime : ""}`)
+    getPlaylist: (cat, offset) => {
+        return axios.get(`/top/playlist?cat=${cat}&limit=30&offset=${offset ? offset : ""}`)
     }
 }
 const videoRequest = {

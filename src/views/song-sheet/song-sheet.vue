@@ -15,11 +15,11 @@
                     <img :src="buttons.all" @click="getAll">
                 </div>
             </div>
-            <scroll-up>
-                <div class="sheet-list" v-if="songList">
+            <scroll-up :loadMore="nextPage" v-if="songList">
+                <div class="sheet-list">
                     <song-item 
-                        v-for="songItem in handlePlayCount" 
-                        :key="songItem.id" 
+                        v-for="(songItem, index) in handlePlayCount" 
+                        :key="songItem.id + index" 
                         :picUrl="songItem.coverImgUrl" 
                         :playCount="songItem.playCount" 
                         :name="songItem.name"
@@ -49,7 +49,8 @@ export default {
             buttons: {
                 all: require("src/assets/all_button.png")
             },
-            songList: null
+            songList: null,
+            isloading: false
         }
     },
     computed: {
@@ -57,10 +58,12 @@ export default {
            let newSongList = this.songList.playlists.map(item => {
                let newItem = JSON.parse(JSON.stringify(item));
                newItem.playCount = newItem.playCount.toString();
+               console.log(newItem.playCount, newItem.playCount.length)
                if (newItem.playCount.length >= 5 && newItem.playCount.length <= 8) {
                    newItem.playCount = newItem.playCount.substring(0, newItem.playCount.length - 4) + '万';
-               } else if (item.playCount.length > 8) {
+               } else if (newItem.playCount.length > 8) {
                    newItem.playCount = newItem.playCount.substring(0, newItem.playCount.length - 8) + '亿';
+                   console.log(newItem.playCount)
                }
                return newItem;
            })
@@ -68,8 +71,15 @@ export default {
        } 
     },
     methods: {
-        nextPage() {
-            console.log("到底翻页");
+        nextPage(callback) {
+            if (!this.isloading) {
+                if (this.songList.more) {
+                    this.getSongs(this.groupList[this.index].name, this.songList.playlists.length, callback);
+                } else {
+                    console.log("没有更多了");
+                }
+                
+            }
         },
         scrollToIndex(index) {
             let groupUl = this.$refs.groupUl;
@@ -88,14 +98,18 @@ export default {
                     console.log(error)
                 })
         },
-        getSongs(cat, updateTime) {
+        getSongs(cat, updateTime, callback) {
+            this.isloading = true;
             discoverRequest.getPlaylist(cat, updateTime)
                 .then(res => {
+                    this.isloading = false;
                     if (!this.songList) {
                         this.songList = res.data
                     } else {
                         this.songList.playlists = this.songList.playlists.concat(res.data.playlists);
-                        this.songList.lasttime = res.data.lasttime;
+                    }
+                    if (callback) {
+                        callback();
                     }
                 })
         },
@@ -103,7 +117,6 @@ export default {
             this.index = songIndex;
             this.scrollToIndex(songIndex);
             this.songList = null;
-            console.log(this.groupList[songIndex])
             this.getSongs(this.groupList[songIndex].name);
         },
         goBack() {
