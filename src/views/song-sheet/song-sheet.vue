@@ -12,7 +12,7 @@
                     <li v-for="(songGroup, songIndex) in groupList" :class="{'video-option-select': index === songIndex}" :key="songGroup.id" @click="checkGroup(songIndex, songGroup.id)">{{songGroup.name}}</li>
                 </ul>
                 <div class="get-all">
-                    <img :src="buttons.all" @click="getAll">
+                    <img :src="buttons.all" @click="getSort">
                 </div>
             </div>
             <scroll-up :loadMore="nextPage" v-if="songList">
@@ -27,6 +27,11 @@
                     ></song-item>
                 </div>
             </scroll-up>
+            <transition name="fade">
+                <div class="sheet-sort" v-show="sortShow">
+                    <song-sort />
+                </div>
+            </transition>
         </div>
     </transition>
 </template>
@@ -35,12 +40,14 @@ import backButton from "src/components/back-button.vue";
 import songItem from "../discover/components/song-item.vue";
 import scrollUp from "src/components/scroll-up.vue";
 import { discoverRequest } from "src/store/api.js";
+import songSort from "./song-sort.vue";
 export default {
     name: "song-sheet",
     components: {
         backButton,
         songItem,
-        scrollUp
+        scrollUp,
+        songSort
     },
     data() {
         return {
@@ -50,7 +57,13 @@ export default {
                 all: require("src/assets/all_button.png")
             },
             songList: null,
-            isloading: false
+            isloading: false,
+            sortShow: false
+        }
+    },
+    provide() {
+        return {
+            closeSort: this.closeSort
         }
     },
     computed: {
@@ -58,12 +71,10 @@ export default {
            let newSongList = this.songList.playlists.map(item => {
                let newItem = JSON.parse(JSON.stringify(item));
                newItem.playCount = newItem.playCount.toString();
-               console.log(newItem.playCount, newItem.playCount.length)
                if (newItem.playCount.length >= 5 && newItem.playCount.length <= 8) {
                    newItem.playCount = newItem.playCount.substring(0, newItem.playCount.length - 4) + '万';
                } else if (newItem.playCount.length > 8) {
                    newItem.playCount = newItem.playCount.substring(0, newItem.playCount.length - 8) + '亿';
-                   console.log(newItem.playCount)
                }
                return newItem;
            })
@@ -123,8 +134,11 @@ export default {
             this.$router.go(-1);
             this.$destroy();
         },
-        getAll() {
-            
+        getSort() {
+            this.sortShow = true;
+        },
+        closeSort() {
+            this.sortShow = false;  
         },
         pushSongDetail(id) {
             discoverRequest.getSongDetail(id)
@@ -139,25 +153,25 @@ export default {
                 .catch(error => {
                     console.log(error);
                 })
-        }
-    },
-    activated() {
-        if (typeof this.$route.params.groupList !== 'undefined') {
-            this.groupList = this.$route.params.groupList;
-            this.getSongs(this.groupList[0].name);
-
-        } else {
-            if (!this.groupList) {
-                this.getGroups();
             }
-        }
-    },
-    deactivated() {
-        
-    },
-    mounted() {
+        },
+        activated() {
+            if (typeof this.$route.params.groupList !== 'undefined') {
+                this.groupList = this.$route.params.groupList;
+                this.getSongs(this.groupList[0].name);
 
-    }
+            } else {
+                if (!this.groupList) {
+                    this.getGroups();
+                }
+            }
+        },
+        deactivated() {
+            
+        },
+        mounted() {
+
+        }
 }
 </script>
 <style lang="less">
