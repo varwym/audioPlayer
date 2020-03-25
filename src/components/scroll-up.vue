@@ -39,8 +39,6 @@ export default {
             e.preventDefault();
             e.stopPropagation();
             let moveY = e.changedTouches[0].clientY - this.startY;
-            // let bottom = 
-            // console.log(document.documentElement.scrollTop, document.body.clientHeight, document.documentElement.scrollHeight)
             if (this.transformY >=0) {
                 this.transformY += moveY * this.spring;
             } else if (this.transformY <= -(document.documentElement.scrollHeight - document.body.clientHeight - 40)) {

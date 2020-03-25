@@ -1,3 +1,4 @@
+@import "../common.less";
 .sort-list {
     position: relative;
     left: 10px;
@@ -6,4 +7,21 @@
 .sort-title {
     margin-top: 40px;
     font-weight: lighter;
+}
+.sort-view {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    .sort-label {
+        width: 22%;
+        height: 30px;
+        border-radius: 30px;
+        background-color: @common-gray;
+        text-align: center;
+        line-height: 30px;
+        margin-bottom: 20px;
+    }
 }

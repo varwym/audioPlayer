@@ -1,6 +1,6 @@
 <template>
     <div v-show="songList && songList.length > 0">
-        <div style="width: 100%; height: 50px"></div>
+        <div style="position: relative; width: 100%; height: 50px"></div>
         <transition name="fullScreen">
             <div v-if="showState === 0" class="player-container">
                 <div class="player-background" :style="backgroundImg"></div>
