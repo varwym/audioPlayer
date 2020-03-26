@@ -17,6 +17,8 @@
                 :name="songItem.name"
                 @click.native="pushSongDetail(songItem.id)"
             ></song-item>
+            <div style="width: 32%; height: 0px;" v-for="(stuff, index) in getStuff" :key="index">
+            </div>
         </div>
     </div>
 </template>
@@ -55,6 +57,17 @@ export default {
                return newItem;
            })
            return newSongList;
+       },
+       getStuff() {
+           if (this.songList && this.songList.length % 3 !== 0) {
+               let stuffDiv = [];
+               for (let i=0; i<this.songList.length % 3; i++) {
+                   stuffDiv.push(1);
+               }
+               return stuffDiv;
+           } else {
+               return [];
+           }
        } 
     },
     methods: {

@@ -8,7 +8,7 @@
         />
         <h5 class="sort-title">我的歌单广场</h5>
         <div class="sort-view" v-if="sortList">
-            <div class="sort-label" v-for="(item, index) in sortList.sub" :key="index">
+            <div class="sort-label" v-for="(item, index) in sortList.sub" :key="index" @click="getSongList(item.name)">
                 {{item.name}}
             </div>
         </div>
@@ -44,9 +44,11 @@ export default {
                 .then(res => {
                     if (res.status === 200) {
                         this.sortList = res.data;
-                        console.log(this.sortList)
                     }
                 })
+        },
+        getSongList(name) {
+            this.$router.push({name: "songClassify", query: { name: name } });
         }
     }
 }

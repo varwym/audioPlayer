@@ -9,6 +9,7 @@ import audioPlayer from '@/views/audio-player/audio-player.vue'
 import rankList from '@/views/rank-list/rank-list.vue'
 import songSheet from '@/views/song-sheet/song-sheet.vue'
 import normalRecommend from '@/views/day-recommend/normal-recommend.vue';
+import songClassify from '@/views/song-sheet/song-classify.vue';
 Vue.use(VueRouter)
 
 const routes = [
@@ -57,16 +58,12 @@ const routes = [
     path: '/songSheet',
     name: 'songSheet',
     component: songSheet
+  },
+  {
+    path: '/songClassify',
+    name: 'songClassify',
+    component: songClassify
   }
-  // {
-  //   path: '/about',
-  //   name: 'about',
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () => import(/* webpackChunkName: "about" */ '../views/About.vue')
-  // }
-  
 ]
 
 const router = new VueRouter({

@@ -4,7 +4,7 @@
             <li v-for="(video, videoIndex) in groupList" :class="{'video-option-select': index === videoIndex}" :key="video.id" @click="checkGroup(videoIndex, video.id)">{{video.name}}</li>
         </ul>
         <div ref="videoItemList" class="video-item-list">
-            <div class="video-item" v-for="(videoItem, videoItemIndex) in handleVideoList" :key="videoItem.threadId">
+            <div class="video-item" v-for="videoItem in handleVideoList" :key="videoItem.threadId">
                 <video controls="controls" :src="videoItem.videoUrl"></video>
                 <div class="video-item-text">
                     <p :class="{'video-item-text-noImg':!videoItem.title}">{{videoItem.title}}</p>

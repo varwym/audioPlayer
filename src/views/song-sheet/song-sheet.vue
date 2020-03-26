@@ -15,7 +15,7 @@
                     <img :src="buttons.all" @click="getSort">
                 </div>
             </div>
-            <scroll-up :loadMore="nextPage" v-if="songList">
+            <scroll-up :loadMore="nextPage" v-if="songList" :isMoreProp="songList.more">
                 <div class="sheet-list">
                     <song-item 
                         v-for="(songItem, index) in handlePlayCount" 
@@ -25,6 +25,8 @@
                         :name="songItem.name"
                         @click.native="pushSongDetail(songItem.id)"
                     ></song-item>
+                    <div style="width: 32%; height: 0px;" v-for="(stuff, index) in getStuff" :key="index">
+                    </div>
                 </div>
             </scroll-up>
             <transition name="fade">
@@ -68,17 +70,28 @@ export default {
     },
     computed: {
         handlePlayCount() {
-           let newSongList = this.songList.playlists.map(item => {
-               let newItem = JSON.parse(JSON.stringify(item));
-               newItem.playCount = newItem.playCount.toString();
-               if (newItem.playCount.length >= 5 && newItem.playCount.length <= 8) {
-                   newItem.playCount = newItem.playCount.substring(0, newItem.playCount.length - 4) + '万';
-               } else if (newItem.playCount.length > 8) {
-                   newItem.playCount = newItem.playCount.substring(0, newItem.playCount.length - 8) + '亿';
+            let newSongList = this.songList.playlists.map(item => {
+                let newItem = JSON.parse(JSON.stringify(item));
+                newItem.playCount = newItem.playCount.toString();
+                if (newItem.playCount.length >= 5 && newItem.playCount.length <= 8) {
+                    newItem.playCount = newItem.playCount.substring(0, newItem.playCount.length - 4) + '万';
+                } else if (newItem.playCount.length > 8) {
+                    newItem.playCount = newItem.playCount.substring(0, newItem.playCount.length - 8) + '亿';
+                }
+                return newItem;
+            })
+            return newSongList;
+       },
+       getStuff() {
+           if (this.songList && this.songList.playlists.length % 3 !== 0) {
+               let stuffDiv = [];
+               for (let i=0; i<this.songList.playlists.length % 3; i++) {
+                   stuffDiv.push(1);
                }
-               return newItem;
-           })
-           return newSongList;
+               return stuffDiv;
+           } else {
+               return [];
+           }
        } 
     },
     methods: {
@@ -86,6 +99,7 @@ export default {
             if (!this.isloading) {
                 if (this.songList.more) {
                     this.getSongs(this.groupList[this.index].name, this.songList.playlists.length, callback);
+                    console.log(this.songList.playlists.length)
                 } else {
                     console.log("没有更多了");
                 }
@@ -174,7 +188,7 @@ export default {
         }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped>
 @import "../../styles/song-sheet/song-sheet.less";
 @import "../../styles/common.less";
 </style>

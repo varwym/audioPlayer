@@ -1,7 +1,8 @@
 <template>
     <div ref="container" @touchstart="touchstart" @touchmove="touchmove" @touchend="touchend" @mousewheel.prevent>
         <slot></slot>
-        <div class="loadmore">正在加载</div>
+        <div v-if="isMoreProp" class="loadmore">正在加载</div>
+        <div v-else class="loadmore">没有更多了</div>
     </div>    
 </template>
 <script>
@@ -10,6 +11,10 @@ export default {
     props: {
         loadMore: {
             type: Function
+        },
+        isMoreProp: {
+            default: false,
+            type: Boolean
         }
     },
     data() {
@@ -37,7 +42,6 @@ export default {
         },
         touchmove(e) {
             e.preventDefault();
-            e.stopPropagation();
             let moveY = e.changedTouches[0].clientY - this.startY;
             if (this.transformY >=0) {
                 this.transformY += moveY * this.spring;
@@ -61,7 +65,9 @@ export default {
                 this.setTranslate(200);
                 this.transformY = -(document.documentElement.scrollHeight - document.body.clientHeight - 40);
                 this.setTransform(this.transformY);
-                this.loadMore(this.moveto);
+                if (this.isMoreProp) {
+                    this.loadMore(this.moveto);   
+                }
             }
         },
         moveto() {
